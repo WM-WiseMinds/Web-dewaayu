@@ -18,13 +18,13 @@ class Role extends Model
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model operator
     public function permissions()
     {
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model operator
+        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model operator
         return $this->belongsToMany(Permissions::class);
     }
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model operator
     public function user()
     {   
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model operator
+        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model operator
         return $this->hasMany(User::class);
     }
 

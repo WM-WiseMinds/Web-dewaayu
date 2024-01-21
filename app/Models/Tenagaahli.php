@@ -22,13 +22,13 @@ class Tenagaahli extends Model
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model user
     public function user()
     {
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model user
+        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model user
         return $this->belongsTo(User::class);
     }
 
     public function penjadwalan()
     {
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model penjadwalan
+        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model penjadwalan
         return $this->hasMany(Penjadwalan::class);
     }
 }

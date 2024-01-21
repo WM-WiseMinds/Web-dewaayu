@@ -22,19 +22,19 @@ class Sekretarisdesa extends Model
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model user
     public function user()
     {
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model user
+        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model user
         return $this->belongsTo(User::class);
     }
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model penjadwalan
     public function penjadwalan()
     {
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model penjadwalan
+        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model penjadwalan
         return $this->hasMany(Penjadwalan::class);
     }
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model surat
     public function surat()
     {   
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model surat
+        // line baris dibawah ini adalah  relasi one to many menggunakan hasMany yang dimana  menghubungkan model ini dengan model surat
         return $this->hasMany(Surat::class);
     }
 }

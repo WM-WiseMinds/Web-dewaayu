@@ -27,38 +27,38 @@ class Penjadwalan extends Model
     //kolom di bawah ini adalah untuk menghubungkan model ini dengan model lain
     public function operator()
     {
-        // line ini adalah untuk menghubungkan model ini dengan model operator
+        // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model operator
         return $this->belongsTo(Operator::class);
     }
     //kolom di bawah ini adalah untuk menghubungkan model ini dengan model lain
     public function tenagaahli()
     {
-        // line ini adalah untuk menghubungkan model ini dengan model tenagaahli
+        // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model tenagaahli
         return $this->belongsTo(Tenagaahli::class);
     }
     //kolom di bawah ini adalah untuk menghubungkan model ini dengan model lain
     public function sekretarisdesa()
     {
-        // line ini adalah untuk menghubungkan model ini dengan model sekretarisdesa
+        // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model sekretarisdesa
         return $this->belongsTo(Sekretarisdesa::class);
     }
     //kolom di bawah ini adalah untuk menghubungkan model ini dengan model lain
     public function surat()
     {
-        // line ini adalah untuk menghubungkan model ini dengan model surat
+        // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model surat
         return $this->belongsTo(Surat::class);
     }
-    //kolom di bawah ini adalah untuk menghubungkan model ini dengan model lain
+    //kolom di bawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model lain
     public function berita()
     {
 
-        // line ini adalah untuk menghubungkan model ini dengan model berita
+        // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model berita
         return $this->belongsTo(Berita::class);
     }
     //kolom di bawah ini adalah untuk menghubungkan model ini dengan model lain
     public function user()
     {
-        // line ini adalah untuk menghubungkan model ini dengan model user
+        // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model user
         return $this->belongsTo(User::class);
     }
 }

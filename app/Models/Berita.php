@@ -21,13 +21,13 @@ class Berita extends Model
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model operator
     public function operator()
     {
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model operator
+        // line baris dibawah ini adalah relasi one to many untuk menghubungkan model ini dengan model operator menggunakan belongsto
         return $this->belongsTo(Operator::class);
     }
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model user    
     public function user()
     {
-        // line baris dibawah ini adalah untuk menghubungkan model ini dengan model user
+        // line baris dibawah ini adalah relasi one to many dengan model user
         return $this->belongsTo(User::class);
     }
 }
