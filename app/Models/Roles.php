@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 // ini adalah model untuk berita
-class Role extends Model
+class Roles extends Model
 {
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan tabel berita
     use HasFactory;

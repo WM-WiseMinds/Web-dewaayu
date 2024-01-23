@@ -34,6 +34,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id'
     ];
 
     /**
@@ -114,7 +115,7 @@ class User extends Authenticatable
     public function role()
     {
         // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model role
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(Roles::class, 'role_id');
     }
 
 
