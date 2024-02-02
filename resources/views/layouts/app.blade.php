@@ -118,7 +118,9 @@
     </div>
 
     @stack('modals')
+    @livewire('wire-elements-modal')
 
+    @wireUiScripts
     @livewireScripts
 </body>
 
