@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +26,15 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/permissions', function () {
+    Route::get( '/permissions', function () {
         return view('permissions');
     })->name('permissions');
 
     Route::get('/roles', function () {
         return view('roles');
     })->name('roles');
+
+    Route::get('/users', function () {
+        return view('user');
+    })->name('user');
 });
