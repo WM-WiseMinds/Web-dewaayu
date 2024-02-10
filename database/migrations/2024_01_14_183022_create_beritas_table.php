@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('beritas', function (Blueprint $table) {
+        Schema::create('berita', function (Blueprint $table) {
             // Ini adalah kolom 'id' yang akan menjadi primary key tabel.
             $table->id();
             // Ini adalah kolom 'user_id' yang akan menjadi foreign key, terhubung dengan tabel 'users'.
             // Juga, jika user terkait dihapus, record berita yang terkait juga akan dihapus ('onDelete' cascade).
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            // Ini adalah kolom 'operator_id' yang akan menjadi foreign key, terhubung dengan tabel 'operators'.
-            // Juga, jika operator terkait dihapus, record berita yang terkait juga akan dihapus ('onDelete' cascade).
-            $table->foreignId('operator_id')->constrained('operators')->onDelete('cascade');
             // Ini adalah kolom 'judul_berita' yang akan digunakan untuk menyimpan judul berita.
             $table->string('judul_berita');
             // Ini adalah kolom 'deskripsi_berita' yang akan digunakan untuk menyimpan deskripsi atau isi berita.

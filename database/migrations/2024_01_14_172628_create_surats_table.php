@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('surats', function (Blueprint $table) {
+        Schema::create('surat', function (Blueprint $table) {
             // Ini adalah kolom 'id' yang akan menjadi primary key tabel.
             $table->id();
             //ini adalah kolom untuk menghubungkan tabel surat dengan tabel user
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            //ini adalah kolom untuk menghubungkan tabel surat dengan tabel seketarisdesa
-            $table->foreignId('sekretarisdesa_id')->constrained('sekretarisdesas')->onDelete('cascade');
             //ini adalah kolom tabel untuk menyimpan atribut perihal
             $table->string('perihal');
             //ini adalah kolom tabel untuk menyimpan atribut tanggal_kegiatan

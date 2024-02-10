@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('permissions', function (Blueprint $table) {
-        // Ini adalah kolom 'id' yang akan menjadi primary key tabel.
-        $table->id();
-        // Ini adalah kolom 'name' yang akan digunakan untuk menyimpan nama peran atau role.
-        $table->string('name');
-        // Ini adalah kolom 'timestamps' yang otomatis akan mencatat waktu pembuatan dan pembaruan record.
-        $table->timestamps();
+            // Ini adalah kolom 'id' yang akan menjadi primary key tabel.
+            $table->id();
+            // Ini adalah kolom 'name' yang akan digunakan untuk menyimpan nama peran atau role.
+            $table->string('name');
+            // Ini adalah kolom 'timestamps' yang otomatis akan mencatat waktu pembuatan dan pembaruan record.
+            $table->timestamps();
         });
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Models\Sekretarisdesa;
+use App\Models\Surat;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
@@ -16,7 +16,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
-final class SekretarisdesaTable extends PowerGridComponent
+final class SuratTable extends PowerGridComponent
 {
     use WithExport;
 
@@ -37,7 +37,7 @@ final class SekretarisdesaTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Sekretarisdesa::query();
+        return Surat::query();
     }
 
     public function relationSearch(): array
@@ -69,7 +69,7 @@ final class SekretarisdesaTable extends PowerGridComponent
         $this->js('alert('.$rowId.')');
     }
 
-    public function actions(\App\Models\Sekretarisdesa $row): array
+    public function actions(\App\Models\Surat $row): array
     {
         return [
             Button::add('edit')

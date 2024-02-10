@@ -11,10 +11,10 @@ class UserSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
-    {
-        User::factory(50)->create();
+    public function run(): void{
 
+        User::factory(15)->create();
+        
         $user = User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@example.com',
