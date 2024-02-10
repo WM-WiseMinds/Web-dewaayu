@@ -27,7 +27,7 @@ return new class extends Migration
             //ini adalah kolom tabel untuk menyimpan atribut tanggal kegiatan
             $table->date('tanggal_kegiatan');
             //ini adalah kolom tabel untuk menyimpan atribut waktu kegiatan
-            $table->string('waktu_kegiatan');
+            $table->time('waktu_kegiatan');
             //ini adalah kolom tabel untuk menyimpan atribut detail kegiatan
             $table->string('detail_kegiatan');
             //ini adalah kolom tabel untuk menyimpan atribut lokasi kegiatan

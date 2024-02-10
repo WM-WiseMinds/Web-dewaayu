@@ -11,7 +11,7 @@ class Operator extends Model
     use HasFactory;
 
     // line baris dibawah ini adalah untuk menentukan nama tabelnya
-    protected $table = 'operator';
+    protected $table = 'operators';
     // line baris dibawah ini adalah untuk menentukan kolom yang bisa diisi atau di edit
     protected $fillable = [
         'id_user',

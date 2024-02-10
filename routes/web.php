@@ -33,8 +33,25 @@ Route::middleware([
     Route::get('/roles', function () {
         return view('roles');
     })->name('roles');
-
     Route::get('/users', function () {
         return view('user');
     })->name('user');
+    Route::get('/berita', function () {
+        return view('berita');
+    })->name('berita');
+    Route::get('/operator', function () {
+        return view('operator');
+    })->name('operator');
+    Route::get('/sekretarisdesa', function () {
+        return view('sekretarisdesa');
+    })->name('sekretarisdesa');
+    Route::get('/tenagaahli', function () {
+        return view('tenagaahli');
+    })->name('tenagaahli');
+    Route::get('/surat', function () {
+        return view('surat');
+    })->name('surat');
+    Route::get('/penjadwalan', function () {
+        return view('penjadwalan');
+    })->name('penjadwalan');
 });

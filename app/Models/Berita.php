@@ -10,6 +10,7 @@ class Berita extends Model
 {
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan tabel berita
     use HasFactory;
+    protected $table = 'beritas';
     // line baris dibawah ini adalah untuk menentukan nama tabelnya
     protected $fillable = [
         'operator_id',
