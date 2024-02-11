@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,12 +18,13 @@ class BeritaFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->numberBetween('1', '5'),
-            'operator_id' => $this->faker->numberBetween('1', '6'),
-            'judul_berita' => $this->faker->word,
-            'foto' => $this->faker->word,
-            'deskripsi_berita' => $this->faker->text,
-            'created_at' => $this->faker->dateTime(),
+            'user_id' => User::factory(),
+            'judul_berita' => $this->faker->sentence,
+            'foto' => $this->faker->imageUrl(640, 480), // menghasilkan URL ke gambar acak dengan lebar 640px dan tinggi 480px
+            'deskripsi_berita' => $this->faker->paragraph,
+            'no_berita' => $this->faker->unique()->numberBetween(1000, 9000),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

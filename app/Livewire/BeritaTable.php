@@ -3,10 +3,12 @@
 namespace App\Livewire;
 
 use App\Models\Berita;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Footer;
@@ -32,53 +34,64 @@ final class BeritaTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->showCollapseIcon()
+                ->view('details.berita-detail'),
         ];
     }
 
     public function datasource(): Builder
     {
-        return Berita::query();
+        return Berita::query()
+            ->leftJoin('users', 'berita.user_id', '=', 'users.id')
+            ->select('berita.*', 'users.name as name','users.no_hp as no_hp','users.alamat as alamat');
+        ;
     }
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'users'=> ['name','no_hp','alamat']
+        ];
     }
 
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('operator_id')
+            ->add('name')
             ->add('judul_berita')
-            ->add('foto')
             ->add('deskripsi_berita')
-            ->add('created_at');
+            ->add('foto')
+            ->add('no_berita');
+         
     }
-
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
-            Column::make('Operator id', 'operator_id'),
-            Column::make('Judul berita', 'judul_berita')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Foto', 'foto')
-                ->sortable()
-                ->searchable(),
-            Column::make('Deskripsi berita', 'deskripsi_berita')
-                ->sortable()
-                ->searchable(),
-
-
-            Column::make('Created at', 'created_at_formatted', 'created_at')
+            Column::make('Id','id')
+                ->searchable()
                 ->sortable(),
 
-            Column::make('Created at', 'created_at')
-                ->sortable()
-                ->searchable(),
+            Column::make('Nama ','name')
+                ->searchable()
+                ->sortable(),
+                
+            Column::make('Judul Berita','judul_berita')
+                ->searchable()
+                ->sortable(),
+
+            // Column::make('Deskripsi Berita','deskripsi_berita')
+            //     ->searchable()
+            //     ->sortable(),
+
+            // Column::make('Foto','foto')
+            //     ->searchable()
+            //     ->sortable(),
+
+            Column::make('No Berita','no_berita')
+                ->searchable()
+                ->sortable(),
 
             Column::action('Action')
         ];
@@ -151,7 +164,32 @@ final class BeritaTable extends PowerGridComponent
         );
     }
 
-    
+     // Function to export PDF using DomPDF
+     public function exportPdf()
+     {
+         $path = public_path() . '/pdf';
+         // Mendapatkan datasource
+         $datasource = $this->datasource()->get();
+         // Membuat folder pdf jika belum ada
+         if (!file_exists($path)) {
+             mkdir($path, 0777, true);
+         }
+         // Membuat file pdf
+         $pdf = Pdf::loadView('pdf.berita', ['datasource' => $datasource]);
+         // Menyimpan file pdf ke folder pdf
+         $pdf->save($path . '/berita.pdf');
+         // Menampilkan file pdf
+         return response()->download($path . '/berita.pdf');
+     }
+ 
+     // Function to delete data
+     public function delete($rowId)
+     {
+         $berita = Berita::findOrFail($rowId);
+         // Detach all associated users
+         $berita->user()->detach();
+         $berita->delete();
+     }
 
 
     /*

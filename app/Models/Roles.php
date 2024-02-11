@@ -19,7 +19,7 @@ class Roles extends Model
     public function permissions()
     {
         // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model operator
-        return $this->belongsToMany(Permissions::class);
+        return $this->belongsToMany(Permissions::class, 'roles_permissions', 'role_id', 'permission_id');
     }
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model operator
     public function user()

@@ -22,14 +22,10 @@ class PenjadwalanFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'operator_id' => Operator::factory(),
-            'sekretarisdesa_id' => Sekretarisdesa::factory(),
-            'tenagaahli_id' => Tenagaahli::factory(),
-            'tanggal' => $this->faker->date(),
-            'waktu' => $this->faker->time(),
-            'tempat' => $this->faker->word,
-            'agenda' => $this->faker->text,
-            'status' => $this->faker->word,
+            'tanggal_kegiatan' => $this->faker->date(),
+            'waktu_kegiatan' => $this->faker->time(),
+            'detail_kegiatan' => $this->faker->text($maxNbChars = 200),
+            'lokasi_kegiatan' => $this->faker->address,
         ];
     }
 }

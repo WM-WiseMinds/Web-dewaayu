@@ -12,19 +12,17 @@ class SuratForm extends ModalComponent
 {
     public Surat $surat;
 
-    public $user_id, $user, $sekretarisdesa,  $sekretarisdesa_id, $perihal, $tanggal_kegiatan, $hari, $jam_kegiatan, $lokasi_kegiatan, $id;
+    public $user_id, $user, $perihal, $tanggal_kegiatan, $hari, $jam_kegiatan, $lokasi_kegiatan, $id;
     public function render()
     {
         $user = User::all();
-        $sekretarisdesa = Sekretarisdesa::all();
         $surat = Surat::all();
-        return view('livewire.surat-form', compact('user', 'sekretarisdesa', 'surat'));
+        return view('livewire.surat-form', compact('user',  'surat'));
     }
 
     public function rules(){
         return [
             'user_id' => 'required',
-            'sekretarisdesa_id' => 'required',
             'perihal' => 'required',
             'tanggal_kegiatan' => 'required',
             'hari' => 'required',
@@ -36,7 +34,6 @@ class SuratForm extends ModalComponent
     public function resetcreate()
     {
         $this->user_id = '';
-        $this->sekretarisdesa_id = '';
         $this->perihal = '';
         $this->tanggal_kegiatan = '';
         $this->hari = '';
@@ -48,7 +45,6 @@ class SuratForm extends ModalComponent
     {
         $this->validate([
             'user_id' => 'required',
-            'sekretarisdesa_id' => 'required',
             'perihal' => 'required',
             'tanggal_kegiatan' => 'required',
             'hari' => 'required',
@@ -67,10 +63,10 @@ class SuratForm extends ModalComponent
 
     public function mount(Surat $surat)
     {
-        if ($surat->exists) {
+        $user = User::all();
+        if (!is_null($surat)) {
             $this->surat = $surat;
             $this->user_id = $surat->user_id;
-            $this->sekretarisdesa_id = $surat->sekretarisdesa_id;
             $this->perihal = $surat->perihal;
             $this->tanggal_kegiatan = $surat->tanggal_kegiatan;
             $this->hari = $surat->hari;

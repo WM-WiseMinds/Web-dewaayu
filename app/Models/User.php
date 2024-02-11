@@ -34,6 +34,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'alamat',
+        'no_hp',    
         'role_id'
     ];
 
@@ -74,13 +76,6 @@ class User extends Authenticatable
     ];
 
 
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model operator
-    public function operator()
-    {
-        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model operator
-        return $this->hasMany(Operator::class);
-    }
-    
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model berita
     public function berita()
     {
@@ -92,18 +87,6 @@ class User extends Authenticatable
     {
         // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model surat
         return $this->hasMany(Surat::class);
-    }
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model tenagaahli
-    public function tenagaahli()
-    {
-        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model tenagaahli
-        return $this->hasMany(Tenagaahli::class);
-    }
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model sekretarisdesa
-    public function sekretarisdesa()
-    {
-        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model sekretarisdesa
-        return $this->hasMany(Sekretarisdesa::class);
     }
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model penjadwalan
     public function penjadwalan()

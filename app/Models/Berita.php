@@ -13,6 +13,7 @@ class Berita extends Model
     protected $table = 'berita';
     // line baris dibawah ini adalah untuk menentukan nama tabelnya
     protected $fillable = [
+        'user_id',
         'no_berita',
         'judul_berita',
         'deskripsi_berita',
