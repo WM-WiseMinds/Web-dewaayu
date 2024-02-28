@@ -22,6 +22,7 @@ export default {
         "./app/Http/Livewire/**/*Table.php",
         "./vendor/power-components/livewire-powergrid/resources/views/**/*.php",
         "./vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php",
+        "./vendor/masmerise/livewire-toaster/resources/views/*.blade.php",
     ],
 
     theme: {
@@ -35,5 +36,5 @@ export default {
         },
     },
 
-    plugins: [forms, typography],
+    plugins: [forms, typography, require("daisyui")],
 };
