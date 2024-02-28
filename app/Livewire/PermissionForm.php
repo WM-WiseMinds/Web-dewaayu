@@ -10,14 +10,17 @@ class PermissionForm extends ModalComponent
 {
     use Toastable;
 
-    public $permissions, $id, $name;
+    public Permission $permission;
+
+    public $id, $name;
 
     public function mount($rowId = null)
     {
-        $this->permissions = Permission::all();
+        $this->permission = new Permission();
         if ($rowId) {
-            $this->id = $rowId;
-            $this->name = Permission::find($rowId)->name;
+            $this->permission = $this->permission->find($rowId);
+            $this->id = $this->permission->id;
+            $this->name = $this->permission->name;
         }
     }
 
@@ -32,19 +35,22 @@ class PermissionForm extends ModalComponent
         $this->name = null;
     }
 
+    protected $rules = [
+        'name' => 'required|string|max:255|unique:permissions,name',
+    ];
+
     public function store()
     {
-        $this->validate([
-            'name' => 'required|unique:permissions,name,' . $this->id,
-        ]);
+        $validatedData = $this->validate();
 
-        $permissions = Permission::updateOrCreate(['id' => $this->id], ['name' => $this->name]);
+        $this->permission->fill($validatedData);
+        $this->permission->save();
 
         $this->closeModalWithEvents([
             PermissionTable::class => 'permissionUpdated',
         ]);
 
-        $this->success($permissions->wasRecentlyCreated ? 'Permission berhasil dibuat' : 'Permission berhasil diupdate');
+        $this->success($this->permission->wasRecentlyCreated ? 'Permission berhasil dibuat' : 'Permission berhasil diupdate');
 
         $this->resetForm();
     }

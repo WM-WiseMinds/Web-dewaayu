@@ -165,7 +165,9 @@ final class PermissionTable extends PowerGridComponent
     // Function to delete data
     public function delete($rowId)
     {
-        $permissions = Permissions::findOrFail($rowId);
+        $permissions = Permission::findOrFail($rowId);
         $permissions->delete();
+
+        $this->success('Permission berhasil dihapus');
     }
 }
