@@ -139,7 +139,7 @@ final class PermissionTable extends PowerGridComponent
             [
                 'exportPdf',
                 'delete',
-                'permissionsUpdated' => '$refresh',
+                'permissionUpdated' => '$refresh',
             ]
         );
     }

@@ -2,57 +2,50 @@
 
 namespace App\Livewire;
 
-use App\Models\Permissions;
-use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Masmerise\Toaster\Toastable;
+use Spatie\Permission\Models\Permission;
 
 class PermissionForm extends ModalComponent
 {
+    use Toastable;
+
     public $permissions, $id, $name;
+
+    public function mount($rowId = null)
+    {
+        $this->permissions = Permission::all();
+        if ($rowId) {
+            $this->id = $rowId;
+            $this->name = Permission::find($rowId)->name;
+        }
+    }
 
     public function render()
     {
-        $permissions = Permissions::all();
-        return view('livewire.permission-form', compact('permissions'));
+        return view('livewire.permission-form');
     }
 
-    public function resetCreateForm()
+    public function resetForm()
     {
-        $this->name = '';
+        $this->id = null;
+        $this->name = null;
     }
 
     public function store()
     {
         $this->validate([
-            'name' => 'required|min:3',
+            'name' => 'required|unique:permissions,name,' . $this->id,
         ]);
 
-        if ($this->id) {
-            $permissions = Permissions::find($this->id);
-            $permissions->update([
-                'name' => $this->name,
-            ]);
-        } else {
-            Permissions::create([
-                'name' => $this->name,
-            ]);
-        }
-
-        session()->flash('message', $this->permissions ? 'Permissions updated.' : 'Permissions created.');
+        $permissions = Permission::updateOrCreate(['id' => $this->id], ['name' => $this->name]);
 
         $this->closeModalWithEvents([
-            PermissionTable::class => 'permissionsUpdated',
+            PermissionTable::class => 'permissionUpdated',
         ]);
 
-        $this->resetCreateForm();
-    }
+        $this->success($permissions->wasRecentlyCreated ? 'Permission berhasil dibuat' : 'Permission berhasil diupdate');
 
-    public function mount($rowId = null)
-    {
-        if (!is_null($rowId)) {
-            $permissions = Permissions::findOrFail($rowId);
-            $this->id = $rowId;
-            $this->name = $permissions->name;
-        }
+        $this->resetForm();
     }
 }
