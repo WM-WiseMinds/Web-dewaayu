@@ -2,18 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\Roles;
+use App\Models\Surat;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class RoleSeeder extends Seeder
+class SuratSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Roles::factory(3)->create();
+        Surat::factory()->count(10)->create();
     }
 }

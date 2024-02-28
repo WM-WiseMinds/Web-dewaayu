@@ -13,8 +13,7 @@ class Surat extends Model
     protected $table = 'surat';
     // line baris dibawah ini adalah untuk menentukan kolom yang bisa diisi atau di edit
     protected $fillable = [
-        'id_user',
-        'id_sekretarisdesa',
+        'user_id',
         'perihal',
         'tanggal_kegiatan',
         'hari',
@@ -27,16 +26,5 @@ class Surat extends Model
         // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model user
         return $this->belongsTo(User::class);
     }
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model sekretarisdesa
-    public function sekretarisdesa()
-    {   
-        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model sekretarisdesa
-        return $this->belongsTo(Sekretarisdesa::class);
-    }
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model penjadwalan
-    public function penjadwalan()
-    {
-        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model penjadwalan
-        return $this->hasMany(Penjadwalan::class);
-    }
+
 }

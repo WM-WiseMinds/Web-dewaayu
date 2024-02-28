@@ -29,6 +29,8 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
+            'no_hp' =>$this->faker->numerify('##########'),
+            'alamat' => $this->faker->randomElement(),
             'current_team_id' => null,
             'role_id' => $this->faker->randomElement([1, 2, 3]),
         ];

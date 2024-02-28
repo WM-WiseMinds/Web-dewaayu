@@ -25,4 +25,28 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    Route::get( '/permissions', function () {
+        return view('permissions');
+    })->name('permissions');
+
+    Route::get('/roles', function () {
+        return view('roles');
+    })->name('roles');
+
+    Route::get('/users', function () {
+        return view('user');
+    })->name('user');
+
+    Route::get('/berita', function () {
+        return view('berita');
+    })->name('berita');
+
+    Route::get('/surat', function () {
+        return view('surat');
+    })->name('surat');
+    
+    Route::get('/penjadwalan', function () {
+        return view('penjadwalan');
+    })->name('penjadwalan');
 });
