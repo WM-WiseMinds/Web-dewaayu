@@ -13,8 +13,31 @@ class RolesPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        Roles::findOrFail(1)->permissions()->sync([1, 2, 3, 4]);
-        Roles::findOrFail(2)->permissions()->sync([1, 2, 3]);
-        Roles::findOrFail(3)->permissions()->sync([1, 2]);
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // create permissions
+        Permission::create(['name' => 'create']);
+        Permission::create(['name' => 'read']);
+        Permission::create(['name' => 'update']);
+        Permission::create(['name' => 'delete']);
+        Permission::create(['name' => 'export']);
+        Permission::create(['name' => 'konfirmasi']);
+        Permission::create(['name' => 'penugasan']);
+
+        // create roles and assign created permissions
+
+        // this can be done as separate statements
+        $role = Role::create(['name' => 'Operator']);
+        $role->givePermissionTo('create', 'read', 'update', 'delete', 'export');
+
+        // or may be done by chaining
+        $role = Role::create(['name' => 'Anggota TAPM'])
+            ->givePermissionTo(['konfirmasi', 'read']);
+
+        $role = Role::create(['name' => 'Koor TAPM'])
+            ->givePermissionTo(['konfirmasi', 'read']);
+
+        $role = Role::create(['name' => 'Sekretaris Desa']);
+        $role->givePermissionTo(Permission::all());
     }
 }

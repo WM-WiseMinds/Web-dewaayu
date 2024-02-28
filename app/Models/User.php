@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+
 // ini adalah model untuk user
 class User extends Authenticatable
 {
@@ -22,6 +24,8 @@ class User extends Authenticatable
     use Notifiable;
     // Trait ini memungkinkan model untuk menggunakan otentikasi dua faktor
     use TwoFactorAuthenticatable;
+    // Trait ini memungkinkan model untuk memiliki peran
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -35,8 +39,7 @@ class User extends Authenticatable
         'email',
         'password',
         'alamat',
-        'no_hp',    
-        'role_id'
+        'no_hp',
     ];
 
     /**
@@ -94,12 +97,9 @@ class User extends Authenticatable
         // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model penjadwalan
         return $this->hasMany(Penjadwalan::class);
     }
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model role
-    public function role()
+
+    protected function getDefaultGuardName(): string
     {
-        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model role
-        return $this->belongsTo(Roles::class, 'role_id');
+        return 'web';
     }
-
-
 }
