@@ -31,8 +31,8 @@ class PermissionForm extends ModalComponent
 
     public function resetForm()
     {
-        $this->id = null;
-        $this->name = null;
+        $this->id = '';
+        $this->name = '';
     }
 
     protected $rules = [
