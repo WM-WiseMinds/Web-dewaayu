@@ -4,83 +4,80 @@ namespace App\Livewire;
 
 use App\Models\Roles;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Masmerise\Toaster\Toastable;
+use Spatie\Permission\Models\Role;
 
 class UserForm extends ModalComponent
 {
-    public $user, $name, $email, $password, $password_confirmation, $user_id, $roles, $role_id;
+    use Toastable;
+
+    public User $user;
+    public $id, $name, $email, $password, $alamat, $no_hp, $roles, $role;
+
+    public function mount($rowId = null)
+    {
+        $this->user = User::findOrNew($rowId);
+        $this->id = $this->user->id;
+        $this->name = $this->user->name;
+        $this->email = $this->user->email;
+        $this->alamat = $this->user->alamat;
+        $this->no_hp = $this->user->no_hp;
+        $this->roles = Role::all();
+
+        if ($rowId) {
+            $this->role = $this->user->roles->pluck('name')->first();
+
+            // dump($this->selectedRole);
+        }
+    }
 
     public function render()
     {
-        $users = User::all();
-        $roles = Roles::all();
-        return view('livewire.user-form', compact('users', 'roles'));
+        return view('livewire.user-form');
     }
 
-    public function resetCreateForm()
+    public function resetForm()
     {
+        $this->id = '';
         $this->name = '';
         $this->email = '';
         $this->password = '';
-        $this->password_confirmation = '';
-        $this->role_id = '';
+        $this->alamat = '';
+        $this->no_hp = '';
+        $this->role = '';
+    }
+
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->id)],
+            'password' => 'required|string|min:8',
+            'alamat' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:13',
+            'role' => 'required',
+        ];
     }
 
     public function store()
     {
-        $rules = [
-            'name' => 'required|min:3',
-            'role_id' => 'required',
-            'password' => 'required|min:6|confirmed',
-        ];
+        $validatedData = $this->validate();
+        $validatedData['password'] = Hash::make($validatedData['password']);
 
-        if ($this->user_id) {
-            // If updating an existing user, ignore the current user's email
-            $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($this->user_id)];
-        } else {
-            // If creating a new user, the email must be unique
-            $rules['email'] = 'required|email|unique:users,email';
-        }
+        $this->user = User::updateOrCreate(['id' => $this->id], $validatedData);
 
-        $this->validate($rules);
-
-        if ($this->user_id) {
-            $user = User::find($this->user_id);
-            $user->update([
-                'name' => $this->name,
-                'email' => $this->email,
-                'password' => bcrypt($this->password),
-                'role_id' => $this->role_id,
-            ]);
-        } else {
-            $user = User::create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'password' => bcrypt($this->password),
-                'role_id' => $this->role_id,
-            ]);
-        }
-
-        session()->flash('message', $this->user ? 'User updated.' : 'User created.');
+        $this->user->syncRoles($this->role);
 
         $this->closeModalWithEvents([
             UserTable::class => 'userUpdated',
         ]);
 
-        $this->resetCreateForm();
-    }
+        $this->success($this->user->wasRecentlyCreated ? 'User berhasil dibuat' : 'User berhasil diupdate');
 
-    public function mount($rowId = null)
-    {
-        $this->roles = Roles::all();
-        if (!is_null($rowId)) {
-            $this->user = User::find($rowId);
-            $this->user_id = $this->user->id;
-            $this->name = $this->user->name;
-            $this->email = $this->user->email;
-            $this->role_id = $this->user->role_id;
-        }
+        $this->resetForm();
     }
 }

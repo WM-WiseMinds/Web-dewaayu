@@ -201,5 +201,7 @@ final class UserTable extends PowerGridComponent
     {
         $user = User::findOrFail($rowId);
         $user->delete();
+
+        $this->success('User berhasil dihapus');
     }
 }
