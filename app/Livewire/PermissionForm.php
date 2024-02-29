@@ -32,16 +32,17 @@ class PermissionForm extends ModalComponent
         $this->name = '';
     }
 
-    protected $rules = [
-        'name' => 'required|string|max:255|unique:permissions,name',
-    ];
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255|unique:permissions,name,' . $this->permission->id,
+        ];
+    }
 
     public function store()
     {
         $validatedData = $this->validate();
         $validatedData['guard_name'] = 'web';
-
-        // dd($validatedData);
 
         $this->permission->fill($validatedData);
         $this->permission->save();

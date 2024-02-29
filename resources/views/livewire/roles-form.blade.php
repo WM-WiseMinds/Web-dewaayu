@@ -14,20 +14,14 @@
                 <div class="mb-4">
                     <label for="exampleFormControlInput1"
                         class="block text-gray-700 text-sm font-bold mb-2">Permissions</label>
-                    {{-- <select wire:model="permissions_id">
-                        @if ($permissions->isEmpty())
-                            <option value="">No Permissions</option>
-                        @elseif ($permissions->count() > 0)
-                            <option value="">Select Permission</option>
-                            @endif --}}
                     @if ($permissions)
-                        <select wire:model="permissions_id" multiple
+                        <select wire:model="permissions_list" multiple
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Pilih Roles">
-                            <option value="" disabled readonly>-- Pilih Roles --
+                            placeholder="Pilih Permissions">
+                            <option value="" disabled readonly>-- Pilih Permissions --
                             </option>
                             @foreach ($permissions as $permission)
-                                <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                                <option value="{{ $permission->name }}">{{ $permission->name }}</option>
                             @endforeach
                         </select>
                     @endif
