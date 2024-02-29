@@ -23,5 +23,6 @@ class UserSeeder extends Seeder
         ]);
 
         $user->assignRole('Sekretaris Desa');
+        $user->removeRole('Operator');
     }
 }

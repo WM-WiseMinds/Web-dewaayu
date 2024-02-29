@@ -6,6 +6,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -17,53 +18,55 @@ use PowerComponents\LivewirePowerGrid\PowerGridColumns;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
+use Spatie\Permission\Models\Role;
 
 final class UserTable extends PowerGridComponent
 {
     use WithExport;
+    use Toastable;
 
     public function setUp(): array
     {
         $this->showCheckBox();
 
-        return [
-            Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+        $setUp = [
             Header::make()->showSearchInput(),
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
         ];
+
+        if (auth()->user()->can('export')) {
+            $setUp[] = Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV);
+        }
+
+        return $setUp;
     }
 
     public function datasource(): Builder
     {
-        return User::query()
-            ->join('roles', 'users.role_id', '=', 'roles.id') // Pastikan 'role_id' adalah foreign key yang benar di tabel 'users'
-            ->select([
-                'users.id', // Pilih kolom yang Anda butuhkan dari tabel 'users'
-                'users.name',
-                'users.email',
-                'users.created_at',
-                'roles.name as role_name', // Alias untuk 'name' dari tabel 'roles'
-            ])->orderBy('users.id', 'asc');
+        return User::query()->with('roles');
     }
 
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'roles' => ['name']
+        ];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('email')
-            ->addColumn('role')
-            ->addColumn('created_at');
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('name')
+            ->add('email')
+            ->add('role_id', fn ($row) => $row->roles->pluck('id')->join(', '))
+            ->add('roles', fn ($row) => $row->roles->pluck('name')->join(', '))
+            ->add('created_at');
     }
 
     public function columns(): array
@@ -79,8 +82,8 @@ final class UserTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make(__('Role'), 'role_name')
-                ->sortable(),
+            Column::make('Roles', 'roles')
+                ->searchable(),
 
             Column::make('Created at', 'created_at')
                 ->sortable()
@@ -90,8 +93,19 @@ final class UserTable extends PowerGridComponent
         ];
     }
 
+    public function roles(): array
+    {
+        return Role::all()->map(function ($role) {
+            return [
+                'value' => $role->id,
+                'label' => $role->name,
+            ];
+        })->toArray();
+    }
+
     public function filters(): array
     {
+        // dump($this->roles());
         return [];
     }
 

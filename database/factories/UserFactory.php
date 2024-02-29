@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -66,5 +67,17 @@ class UserFactory extends Factory
                 ->when(is_callable($callback), $callback),
             'ownedTeams'
         );
+    }
+
+    /**
+     * Indicate that the user should have a role.
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            // Assign the role to the user
+            $role = Role::firstOrCreate(['name' => 'Operator']);
+            $user->assignRole($role);
+        });
     }
 }
