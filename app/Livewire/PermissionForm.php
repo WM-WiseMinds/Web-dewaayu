@@ -16,12 +16,9 @@ class PermissionForm extends ModalComponent
 
     public function mount($rowId = null)
     {
-        $this->permission = new Permission();
-        if ($rowId) {
-            $this->permission = $this->permission->find($rowId);
-            $this->id = $this->permission->id;
-            $this->name = $this->permission->name;
-        }
+        $this->permission = Permission::findOrNew($rowId);
+        $this->id = $this->permission->id;
+        $this->name = $this->permission->name;
     }
 
     public function render()
@@ -42,6 +39,9 @@ class PermissionForm extends ModalComponent
     public function store()
     {
         $validatedData = $this->validate();
+        $validatedData['guard_name'] = 'web';
+
+        // dd($validatedData);
 
         $this->permission->fill($validatedData);
         $this->permission->save();

@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Permissions;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +13,6 @@ use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Footer;
 use PowerComponents\LivewirePowerGrid\Header;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridColumns;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
@@ -165,8 +163,8 @@ final class PermissionTable extends PowerGridComponent
     // Function to delete data
     public function delete($rowId)
     {
-        $permissions = Permission::findOrFail($rowId);
-        $permissions->delete();
+        $permission = Permission::findOrFail($rowId);
+        $permission->delete();
 
         $this->success('Permission berhasil dihapus');
     }
