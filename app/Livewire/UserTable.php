@@ -112,8 +112,6 @@ final class UserTable extends PowerGridComponent
     {
         $actions = [];
 
-        // dd($row);
-
         if (auth()->user()->can('update')) {
             $actions[] =
                 Button::add('edit')

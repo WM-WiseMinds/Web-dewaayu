@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             // ini adalah kolom untuk menghubungkan tabel surat dengan tabel desa
             $table->foreignId('desa_id')->nullable()->constrained('desa')->onDelete('cascade');
+            // ini adalah kolom untuk menyimpan atribut jenis surat
+            $table->enum('jenis_surat', ['Surat Masuk', 'Surat Keluar']);
             // ini adalah kolom untuk menyimpan atribut pengirim
             $table->string('pengirim');
             //ini adalah kolom tabel untuk menyimpan atribut perihal
