@@ -14,11 +14,15 @@ class Surat extends Model
     // line baris dibawah ini adalah untuk menentukan kolom yang bisa diisi atau di edit
     protected $fillable = [
         'user_id',
+        'desa_id',
+        'pengirim',
         'perihal',
         'tanggal_kegiatan',
         'hari',
-        'jam_kegiatan',
+        'waktu',
         'lokasi_kegiatan',
+        'status',
+        'file_surat'
     ];
     // line baris dibawah ini adalah untuk menghubungkan model ini dengan model user
     public function user()
@@ -26,5 +30,4 @@ class Surat extends Model
         // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model user
         return $this->belongsTo(User::class);
     }
-
 }

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('penjadwalan', function (Blueprint $table) {
+        Schema::create('desa', function (Blueprint $table) {
             // Ini adalah kolom 'id' yang akan menjadi primary key tabel.
             $table->id();
-            //ini adalah kolom untuk menghubungkan tabel penjadwalan dengan tabel user
+            //ini adalah kolom untuk menghubungkan tabel desa dengan tabel user
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            //ini adalah kolom tabel untuk melakukan otomatisasi pencatatan waktu pembuatan dan pembaruan record
+            //ini adalah kolom tabel untuk menyimpan atribut nama_desa
+            $table->string('nama_desa');
+            //ini adalah kolom untuk menyimpan atribut mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penjadwalan');
+        Schema::dropIfExists('desa');
     }
 };
