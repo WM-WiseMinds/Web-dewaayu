@@ -7,11 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 // ini adalah model untuk surat
 class Surat extends Model
 {
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan tabel surat
+    // Trait ini memungkinkan model untuk menghasilkan instance model baru
     use HasFactory;
-    // line baris dibawah ini adalah untuk menentukan nama tabelnya
+
+    // ini adalah nama tabel yang akan digunakan oleh model
     protected $table = 'surat';
-    // line baris dibawah ini adalah untuk menentukan kolom yang bisa diisi atau di edit
+
+    /**
+     * Atribut yang dapat diisi.
+     *
+     * @var array
+     */
     protected $fillable = [
         'user_id',
         'desa_id',
@@ -24,10 +30,26 @@ class Surat extends Model
         'status',
         'file_surat'
     ];
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model user
+
+    /**
+     * Relasi antara model Surat dan model User.
+     *
+     * @return void
+     */
     public function user()
     {
         // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model user
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relasi antara model Surat dan model Desa.
+     *
+     * @return void
+     */
+    public function desa()
+    {
+        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model desa
+        return $this->belongsTo(Desa::class);
     }
 }
