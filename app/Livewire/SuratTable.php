@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Surat;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -62,6 +63,7 @@ final class SuratTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('user_id')
+            ->add('name', fn ($row) => $row->user->name)
             ->add('desa_id')
             ->add('jenis_surat')
             ->add('pengirim')
@@ -77,7 +79,7 @@ final class SuratTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Nama', 'user.name')
+            Column::make('Nama', 'name')
                 ->searchable()
                 ->sortable(),
 
@@ -89,7 +91,7 @@ final class SuratTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Created At', 'created_at')
+            Column::make('Status', 'status')
                 ->sortable(),
 
             Column::action('Action')
@@ -99,12 +101,16 @@ final class SuratTable extends PowerGridComponent
     public function filters(): array
     {
         return [
+            Filter::select('name', 'user_id')
+                ->dataSource(User::all()->unique('id'))
+                ->optionLabel('name')
+                ->optionValue('id'),
             Filter::select('jenis_surat', 'jenis_surat')
-                ->dataSource(Surat::all()->pluck('jenis_surat')->unique())
+                ->dataSource(Surat::all()->unique('jenis_surat'))
                 ->optionLabel('jenis_surat')
                 ->optionValue('jenis_surat'),
             Filter::select('status', 'status')
-                ->dataSource(Surat::all()->pluck('status')->unique())
+                ->dataSource(Surat::all()->unique('status'))
                 ->optionLabel('status')
                 ->optionValue('status'),
         ];

@@ -47,7 +47,23 @@ final class UserTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return User::query()->with('roles');
+        // return User::query()->with('roles');
+
+        $selectedRoleId = $this->filters['role_id'] ?? null;
+
+        $query = User::query()
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->with('roles')
+            ->select('users.*', 'roles.name as role_name', 'roles.id as role_id');
+
+        if ($selectedRoleId) {
+            $query->whereHas('roles', function ($subQuery) use ($selectedRoleId) {
+                $subQuery->where('roles.id', $selectedRoleId);
+            });
+        }
+
+        return $query;
     }
 
 
@@ -64,8 +80,7 @@ final class UserTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
-            ->add('role_id', fn ($row) => $row->roles->pluck('id')->join(', '))
-            ->add('roles', fn ($row) => $row->roles->pluck('name')->join(', '))
+            ->add('role_name')
             ->add('created_at');
     }
 
@@ -82,7 +97,7 @@ final class UserTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Roles', 'roles')
+            Column::make('Roles', 'role_name')
                 ->searchable(),
 
             Column::make('Created at', 'created_at')
@@ -105,7 +120,12 @@ final class UserTable extends PowerGridComponent
 
     public function filters(): array
     {
-        return [];
+        return [
+            Filter::select('role_name', 'role_id')
+                ->dataSource(Role::all()->unique('id'))
+                ->optionLabel('name')
+                ->optionValue('id'),
+        ];
     }
 
     public function actions(\App\Models\User $row): array
