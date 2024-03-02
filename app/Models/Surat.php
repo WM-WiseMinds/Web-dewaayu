@@ -19,7 +19,8 @@ class Surat extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'pengirim_id',
+        'penerima_id',
         'desa_id',
         'jenis_surat',
         'pengirim',
@@ -33,14 +34,25 @@ class Surat extends Model
     ];
 
     /**
-     * Relasi antara model Surat dan model User.
+     * Relasi antara model Surat dan model User melalui FK pengirim_id.
      *
      * @return void
      */
-    public function user()
+    public function pengirim()
     {
         // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model user
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'pengirim_id');
+    }
+
+    /**
+     * Relasi antara model Surat dan model User melalui FK penerima_id.
+     *
+     * @return void
+     */
+    public function penerima()
+    {
+        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model user
+        return $this->belongsTo(User::class, 'penerima_id');
     }
 
     /**

@@ -110,16 +110,6 @@ final class UserTable extends PowerGridComponent
         ];
     }
 
-    public function roles(): array
-    {
-        return Role::all()->map(function ($role) {
-            return [
-                'value' => $role->id,
-                'label' => $role->name,
-            ];
-        })->toArray();
-    }
-
     public function filters(): array
     {
         return [

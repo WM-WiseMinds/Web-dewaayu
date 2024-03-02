@@ -47,13 +47,14 @@ final class SuratTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Surat::query()->with(['user', 'desa']);
+        return Surat::query()->with(['pengirim', 'penerima', 'desa']);
     }
 
     public function relationSearch(): array
     {
         return [
-            'user' => ['name'],
+            'pengirim' => ['name'],
+            'penerima' => ['name'],
             'desa' => ['nama_desa']
         ];
     }
@@ -62,11 +63,13 @@ final class SuratTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('user_id')
-            ->add('name', fn ($row) => $row->user->name)
+            ->add('pengirim_id')
+            ->add('penerima_id')
+            ->add('pengirim', fn ($row) => $row->pengirim->name)
+            ->add('penerima', fn ($row) => $row->penerima->name)
             ->add('desa_id')
             ->add('jenis_surat')
-            ->add('pengirim')
+            ->add('pengirim_eksternal')
             ->add('perihal')
             ->add('tanggal_kegiatan')
             ->add('hari')
@@ -79,15 +82,15 @@ final class SuratTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Nama', 'name')
+            Column::make('Nama Pengirim', 'pengirim')
+                ->searchable()
+                ->sortable(),
+
+            Column::make('Nama Penerima', 'penerima')
                 ->searchable()
                 ->sortable(),
 
             Column::make('Jenis Surat', 'jenis_surat')
-                ->searchable()
-                ->sortable(),
-
-            Column::make('Perihal', 'perihal')
                 ->searchable()
                 ->sortable(),
 
@@ -100,9 +103,19 @@ final class SuratTable extends PowerGridComponent
 
     public function filters(): array
     {
+        $pengirimIds = Surat::pluck('pengirim_id')->unique();
+        $penerimaIds = Surat::pluck('penerima_id')->unique();
+
+        $pengirimUsers = User::whereIn('id', $pengirimIds)->get();
+        $penerimaUsers = User::whereIn('id', $penerimaIds)->get();
+
         return [
-            Filter::select('name', 'user_id')
-                ->dataSource(User::all()->unique('id'))
+            Filter::select('pengirim', 'pengirim_id')
+                ->dataSource($pengirimUsers)
+                ->optionLabel('name')
+                ->optionValue('id'),
+            Filter::select('penerima', 'penerima_id')
+                ->dataSource($penerimaUsers)
                 ->optionLabel('name')
                 ->optionValue('id'),
             Filter::select('jenis_surat', 'jenis_surat')

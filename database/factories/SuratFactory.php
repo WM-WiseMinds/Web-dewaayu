@@ -18,11 +18,15 @@ class SuratFactory extends Factory
      */
     public function definition(): array
     {
+        $userIds = User::pluck('id')->toArray();
+        shuffle($userIds);
+
         return [
-            'user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
+            'pengirim_id' => $userIds[0],
+            'penerima_id' => $userIds[1],
             'desa_id' => $this->faker->randomElement(Desa::pluck('id')->toArray()),
             'jenis_surat' => $this->faker->randomElement(['Surat Masuk', 'Surat Keluar']),
-            'pengirim' => $this->faker->name,
+            'pengirim_eksternal' => $this->faker->name,
             'perihal' => $this->faker->sentence,
             'tanggal_kegiatan' => $this->faker->date(),
             'hari' => $this->faker->dayOfWeek,
