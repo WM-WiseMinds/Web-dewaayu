@@ -28,15 +28,28 @@
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
-                {{-- Form select penerima id dengan option dari anggota_tapm --}}
                 <div class="mb-4">
                     <label for="penerima_id"
                         class="block text
-                    -gray-700 text-sm font-bold mb-2">Rekomendasi</label>
-                    <select wire:model="penerima_id"
+                    -gray-700 text-sm font-bold mb-2">Koordinator TAPM</label>
+                    <input wire:model="penerima_id" type="hidden" readonly
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="penerima_id">
-                        <option value="">Pilih Penerima</option>
+                    <input wire:model="penerima_name" type="text" readonly
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="penerima_id" placeholder="Masukkan Nama Penerima">
+                    @error('penerima_id')
+                        <span class="text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="mb-4">
+                    <label for="rekomendasi_id"
+                        class="block text
+                    -gray-700 text-sm font-bold mb-2">Rekomendasi TAPM</label>
+                    <select wire:model="rekomendasi_id"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="rekomendasi_id">
+                        <option value="">Pilih Rekomendasi</option>
                         @foreach ($anggota_tapm as $anggota)
                             <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
                         @endforeach
@@ -92,26 +105,12 @@
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
-                {{-- form input status --}}
-                <div class="mb-4">
-                    <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
-                    <select wire:model="status"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="status">
-                        <option value="">Pilih Status</option>
-                        <option value="Dikirim">Dikirim</option>
-                        <option value="Dikonfirmasi">Dikonfirmasi</option>
-                    </select>
-                    @error('status')
-                        <span class="text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-                {{-- form file surat --}}
                 <div class="mb-4">
                     <label for="exampleFormControlInput3" class="block text-gray-700 text-sm font-bold mb-2">File
                         Surat</label>
 
-                    <input type="file" id="file_surat" wire:model.live="file_surat" x-ref="file_surat" class="w-full"
+                    <input type="file" id="file_surat" wire:model.live="file_surat" x-ref="file_surat"
+                        class="w-full"
                         x-on:change="
                             photoName = $refs.file_surat.files[0].name;
                             const reader = new FileReader();
@@ -125,7 +124,7 @@
                     @enderror
                     @if ($surat->exists && $surat->file_surat)
                         <x-button emerald class="mt-2">
-                            <a href="{{ $file_surat_url }}" download>Download</a>
+                            <a href="{{ $file_url }}" download>Download</a>
                         </x-button>
                     @endif
                 </div>

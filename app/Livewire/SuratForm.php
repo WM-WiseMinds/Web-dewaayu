@@ -7,6 +7,7 @@ use App\Models\Sekretarisdesa;
 use App\Models\Surat;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use LivewireUI\Modal\ModalComponent;
@@ -19,7 +20,7 @@ class SuratForm extends ModalComponent
 
     public Surat $surat;
 
-    public $id, $users, $desas, $pengirim_id, $penerima_id, $desa_id, $jenis_surat, $pengirim_eksternal, $perihal, $tanggal_kegiatan, $hari, $waktu, $lokasi_kegiatan, $status, $file_surat, $role, $pengirim_name, $penerima_name, $desa_name, $anggota_tapm;
+    public $id, $users, $desas, $pengirim_id, $penerima_id, $desa_id, $rekomendasi_id, $jenis_surat, $pengirim_eksternal, $perihal, $tanggal_kegiatan, $hari, $waktu, $lokasi_kegiatan, $status, $file_surat, $role, $pengirim_name, $penerima_name, $desa_name, $koordinatorTAPM, $anggota_tapm, $type, $file_url;
 
     public function getUserRole()
     {
@@ -27,8 +28,8 @@ class SuratForm extends ModalComponent
             return 'Sekretaris Desa';
         } else if (auth()->user()->hasRole('Operator')) {
             return 'Operator';
-        } else if (auth()->user()->hasRole('Koordinator TAPM')) {
-            return 'Koordinator TAPM';
+        } else if (auth()->user()->hasRole('Koor TAPM')) {
+            return 'Koor TAPM';
         } else if (auth()->user()->hasRole('Anggota TAPM')) {
             return 'Anggota TAPM';
         }
@@ -36,12 +37,13 @@ class SuratForm extends ModalComponent
         return null;
     }
 
-    public function mount($rowId = null)
+    public function mount($rowId = null, $type = null)
     {
         $this->surat = Surat::findOrNew($rowId);
         $this->users = User::all();
         $this->desas = Desa::all();
         $this->id = $this->surat->id;
+        // $this->type = $type;
         // $this->pengirim_id = $this->surat->pengirim_id;
         // $this->penerima_id = $this->surat->penerima_id;
         // $this->desa_id = $this->surat->desa_id;
@@ -62,6 +64,15 @@ class SuratForm extends ModalComponent
             $this->pengirim_name = Auth::user()->name;
             $this->desa_id = Auth::user()->desa->id;
             $this->desa_name = Auth::user()->desa->nama_desa;
+            $this->rekomendasi_id = $this->surat->rekomendasi_id;
+            $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Koor TAPM');
+            })->first();
+
+            if ($this->koordinatorTAPM) {
+                $this->penerima_id = $this->koordinatorTAPM->id;
+                $this->penerima_name = $this->koordinatorTAPM->name;
+            }
             $this->anggota_tapm = User::whereHas('roles', function ($query) {
                 $query->where('name', 'Anggota TAPM');
             })->get();
@@ -70,9 +81,12 @@ class SuratForm extends ModalComponent
             $this->hari = $this->surat->hari;
             $this->waktu = $this->surat->waktu;
             $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
+            $this->jenis_surat = $type;
+            $this->status = $rowId ? $this->surat->status : 'Dikirim';
             $this->file_surat = $this->surat->file_surat;
-
-            dump($this->anggota_tapm);
+            if ($this->file_surat) {
+                $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
+            }
         }
     }
 
@@ -86,6 +100,7 @@ class SuratForm extends ModalComponent
         $this->id = '';
         $this->pengirim_id = '';
         $this->penerima_id = '';
+        $this->rekomendasi_id = '';
         $this->desa_id = '';
         $this->jenis_surat = '';
         $this->pengirim_eksternal = '';
@@ -111,6 +126,7 @@ class SuratForm extends ModalComponent
                     }
                 },
             ],
+            'rekomendasi_id' => 'nullable|exists:users,id',
             'desa_id' => 'required|exists:desa,id',
             'jenis_surat' => 'required',
             'pengirim_eksternal' => 'nullable|string|max:255',

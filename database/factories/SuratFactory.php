@@ -24,9 +24,9 @@ class SuratFactory extends Factory
         return [
             'pengirim_id' => $userIds[0],
             'penerima_id' => $userIds[1],
+            'rekomendasi_id' => $userIds[2],
             'desa_id' => $this->faker->randomElement(Desa::pluck('id')->toArray()),
             'jenis_surat' => $this->faker->randomElement(['Surat Masuk', 'Surat Keluar']),
-            'anggota_tapm' => $this->faker->name,
             'pengirim_eksternal' => $this->faker->name,
             'perihal' => $this->faker->sentence,
             'tanggal_kegiatan' => $this->faker->date(),
