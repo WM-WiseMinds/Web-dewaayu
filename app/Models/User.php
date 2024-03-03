@@ -99,8 +99,8 @@ class User extends Authenticatable
      */
     public function desa()
     {
-        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model desa
-        return $this->hasMany(Desa::class);
+        // line baris dibawah ini adalah relasi one to many menggunakan hasOne yang dimana menghubungkan model ini dengan model desa
+        return $this->hasOne(Desa::class);
     }
 
     /**

@@ -83,12 +83,10 @@ final class SuratTable extends PowerGridComponent
     {
         return [
             Column::make('Nama Pengirim', 'pengirim')
-                ->searchable()
-                ->sortable(),
+                ->searchable(),
 
             Column::make('Nama Penerima', 'penerima')
-                ->searchable()
-                ->sortable(),
+                ->searchable(),
 
             Column::make('Jenis Surat', 'jenis_surat')
                 ->searchable()
