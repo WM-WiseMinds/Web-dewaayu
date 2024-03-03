@@ -28,25 +28,20 @@
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
+                {{-- Form select penerima id dengan option dari anggota_tapm --}}
                 <div class="mb-4">
-                    <label for="jenis_surat" class="block text-gray-700 text-sm font-bold mb-2">Jenis Surat</label>
-                    <select wire:model="jenis_surat"
+                    <label for="penerima_id"
+                        class="block text
+                    -gray-700 text-sm font-bold mb-2">Rekomendasi</label>
+                    <select wire:model="penerima_id"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="jenis_surat">
-                        <option value="">Pilih Jenis Surat</option>
-                        <option value="Surat Masuk">Surat Masuk</option>
-                        <option value="Surat Keluar">Surat Keluar</option>
+                        id="penerima_id">
+                        <option value="">Pilih Penerima</option>
+                        @foreach ($anggota_tapm as $anggota)
+                            <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
+                        @endforeach
                     </select>
-                    @error('jenis_surat')
-                        <span class="text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <label for="pengirim" class="block text-gray-700 text-sm font-bold mb-2">Pengirim</label>
-                    <input wire:model="pengirim" type="text"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="pengirim" placeholder="Masukkan Nama Pengirim">
-                    @error('pengirim')
+                    @error('penerima_id')
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
@@ -116,8 +111,7 @@
                     <label for="exampleFormControlInput3" class="block text-gray-700 text-sm font-bold mb-2">File
                         Surat</label>
 
-                    <input type="file" id="file_surat" wire:model.live="file_surat" x-ref="file_surat"
-                        class="w-full"
+                    <input type="file" id="file_surat" wire:model.live="file_surat" x-ref="file_surat" class="w-full"
                         x-on:change="
                             photoName = $refs.file_surat.files[0].name;
                             const reader = new FileReader();

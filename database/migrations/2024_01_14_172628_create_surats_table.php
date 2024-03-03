@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('pengirim_id')->nullable()->constrained('users')->onDelete('cascade');
             // ini adalah kolom untuk menghubungkan tabel surat dengan tabel user melalui foreign key penerima_id
             $table->foreignId('penerima_id')->nullable()->constrained('users')->onDelete('cascade');
+            // ini adalah kolom untuk menyimpan rekomendasi anggota tapm
+            $table->foreignId('rekomendasi_id')->nullable()->constrained('users')->onDelete('cascade');
             // ini adalah kolom untuk menghubungkan tabel surat dengan tabel desa
             $table->foreignId('desa_id')->nullable()->constrained('desa')->onDelete('cascade');
             // ini adalah kolom untuk menyimpan atribut jenis surat

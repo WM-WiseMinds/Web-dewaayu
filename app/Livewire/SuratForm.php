@@ -65,6 +65,12 @@ class SuratForm extends ModalComponent
             $this->anggota_tapm = User::whereHas('roles', function ($query) {
                 $query->where('name', 'Anggota TAPM');
             })->get();
+            $this->perihal = $this->surat->perihal;
+            $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
+            $this->hari = $this->surat->hari;
+            $this->waktu = $this->surat->waktu;
+            $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
+            $this->file_surat = $this->surat->file_surat;
 
             dump($this->anggota_tapm);
         }
