@@ -21,7 +21,7 @@ class SuratForm extends ModalComponent
 
     public Surat $surat;
 
-    public $id, $users, $desas, $pengirim_id, $penerima_id, $desa_id, $rekomendasi_id, $jenis_surat, $pengirim_eksternal, $perihal, $tanggal_kegiatan, $hari, $waktu, $lokasi_kegiatan, $status, $file_surat, $role, $pengirim_name, $penerima_name, $desa_name, $koordinatorTAPM, $anggota_tapm, $type, $file_url, $sekretarisDesa;
+    public $id, $users, $desas, $pengirim_id, $penerima_id, $desa_id, $rekomendasi_id, $jenis_surat, $pengirim_eksternal, $penerima_eksternal, $perihal, $tanggal_kegiatan, $hari, $waktu, $lokasi_kegiatan, $status, $file_surat, $role, $pengirim_name, $penerima_name, $desa_name, $koordinatorTAPM, $anggota_tapm, $type, $file_url, $sekretarisDesa;
     public $recipientType = 'internal';
 
     public function getUserRole()
@@ -69,7 +69,7 @@ class SuratForm extends ModalComponent
             $this->hari = $this->surat->hari;
             $this->waktu = $this->surat->waktu;
             $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
-            $this->jenis_surat = $type;
+            $this->jenis_surat = $rowId ? $this->surat->jenis_surat : $type;
             $this->status = $rowId ? $this->surat->status : 'Dikirim';
             $this->file_surat = $this->surat->file_surat;
             if ($this->file_surat) {
@@ -96,8 +96,8 @@ class SuratForm extends ModalComponent
             $this->hari = $this->surat->hari;
             $this->waktu = $this->surat->waktu;
             $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
-            $this->jenis_surat = $type;
-            $this->status = $this->surat->status;
+            $this->jenis_surat = $rowId ? $this->surat->jenis_surat : $type;
+            $this->status = $rowId ? $this->surat->status : 'Dikirim';
             $this->file_surat = $this->surat->file_surat;
             if ($this->file_surat) {
                 $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
@@ -105,38 +105,24 @@ class SuratForm extends ModalComponent
         } elseif ($this->role == 'Koor TAPM') {
             $this->pengirim_id = Auth::user()->id;
             $this->pengirim_name = Auth::user()->name;
-            // $this->penerima_id = Auth::user()->name;
             $this->desa_id = $this->surat->desa_id;
+            $this->penerima_name = $rowId ? $this->surat->penerima->name : '';
             $this->rekomendasi_id = $this->surat->rekomendasi_id;
             $this->perihal = $this->surat->perihal;
             $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
             $this->hari = $this->surat->hari;
             $this->waktu = $this->surat->waktu;
             $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
-            $this->jenis_surat = $this->surat->jenis_surat;
-            $this->jenis_surat = $type;
-            $this->status = $this->surat->status;
-            // Mendapatkan array user dengan role sekretaris desa
+            $this->jenis_surat = $rowId ? $this->surat->jenis_surat : $type;
+            $this->status = $rowId ? $this->surat->status : 'Dikirim';
             $this->sekretarisDesa = User::whereHas('roles', function ($query) {
                 $query->where('name', 'Sekretaris Desa');
             })->get();
 
-            $this->file_surat = $this->surat->file_surat;
-            if ($this->file_surat) {
-                $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
-            }
-        } elseif ($this->role == 'Anggota TAPM') {
-            $this->pengirim_id = Auth::user()->id;
-            $this->penerima_id = $this->surat->penerima_id;
-            $this->desa_id = $this->surat->desa_id;
-            $this->rekomendasi_id = $this->surat->rekomendasi_id;
-            $this->perihal = $this->surat->perihal;
-            $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
-            $this->hari = $this->surat->hari;
-            $this->waktu = $this->surat->waktu;
-            $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
-            $this->jenis_surat = $this->surat->jenis_surat;
-            $this->status = $this->surat->status;
+            $this->anggota_tapm = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Anggota TAPM');
+            })->get();
+
             $this->file_surat = $this->surat->file_surat;
             if ($this->file_surat) {
                 $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
@@ -160,6 +146,7 @@ class SuratForm extends ModalComponent
         $this->desa_id = '';
         $this->jenis_surat = '';
         $this->pengirim_eksternal = '';
+        $this->penerima_eksternal = '';
         $this->perihal = '';
         $this->tanggal_kegiatan = '';
         $this->hari = '';
@@ -186,6 +173,7 @@ class SuratForm extends ModalComponent
             'desa_id' => 'required|exists:desa,id',
             'jenis_surat' => 'required',
             'pengirim_eksternal' => 'nullable|string|max:255',
+            'penerima_eksternal' => 'nullable|string|max:255',
             'perihal' => 'required|string|max:255',
             'tanggal_kegiatan' => 'nullable|date',
             'hari' => 'nullable|string|max:255',
@@ -199,8 +187,9 @@ class SuratForm extends ModalComponent
     public function store()
     {
         $validatedData = $this->validate();
+        $validatedData['status'] = $this->status;
 
-        dd($validatedData);
+        // dd($validatedData);
 
         if ($this->file_surat) {
             $originalName = pathinfo($this->file_surat->getClientOriginalName(), PATHINFO_FILENAME);
@@ -208,20 +197,20 @@ class SuratForm extends ModalComponent
             $fileName = $originalName . '_' . time() . '.' . $extension;
 
             if ($this->surat->file_surat) {
-                Storage::delete('public/storage/surat/' . $this->surat->file_surat);
+                Storage::delete('public/surat/' . $this->surat->file_surat);
             }
 
-            $this->file_surat->storeAs('public/storage/surat', $fileName);
+            $this->file_surat->storeAs('public/surat', $fileName);
             $validatedData['file_surat'] = $fileName;
         }
 
         $this->surat = Surat::updateOrCreate(['id' => $this->id], $validatedData);
 
+        $this->success($this->surat->wasRecentlyCreated ? 'Surat berhasil dibuat' : 'Surat berhasil diupdate');
         $this->closeModalWithEvents([
             SuratTable::class => 'suratUpdated',
         ]);
 
-        $this->success($this->surat->wasRecentlyCreated ? 'Surat berhasil dibuat' : 'Surat berhasil diupdate');
 
         $this->resetForm();
     }

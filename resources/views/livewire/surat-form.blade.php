@@ -15,7 +15,7 @@
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
-                @if ($jenis_surat == 'keluar')
+                @if ($jenis_surat == 'Surat Keluar')
                     @if ($role == 'Operator')
                         <div class="mb-4">
                             <label for="recipient_type" class="block text-gray-700 text-sm font-bold mb-2">
@@ -66,39 +66,25 @@
                             <input wire:model="penerima_name" type="text" readonly
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="penerima_id" placeholder="Masukkan Nama Penerima">
-                            {{-- @if ($role == 'Sekretaris Desa' || $role == 'Operator')
-                            @else
-                                <select wire:model="penerima_id"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="penerima_id">
-                                    <option value="">Pilih Penerima</option>
-                                    @foreach ($sekretarisDesa as $sekretaris)
-                                        <option value="{{ $sekretaris->id }}">{{ $sekretaris->name }}</option>
-                                    @endforeach
-                                </select>
-                            @endif --}}
                             @error('penerima_id')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
-                        @if ($role == 'Sekretaris Desa' || $role == 'Operator')
-                            <div class="mb-4">
-                                <label for="rekomendasi_id"
-                                    class="block text-gray-700 text-sm font-bold mb-2">Rekomendasi
-                                    TAPM</label>
-                                <select wire:model="rekomendasi_id"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="rekomendasi_id">
-                                    <option value="">Pilih Rekomendasi</option>
-                                    @foreach ($anggota_tapm as $anggota)
-                                        <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('penerima_id')
-                                    <span class="text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        @endif
+                        <div class="mb-4">
+                            <label for="rekomendasi_id" class="block text-gray-700 text-sm font-bold mb-2">Rekomendasi
+                                TAPM</label>
+                            <select wire:model="rekomendasi_id"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="rekomendasi_id">
+                                <option value="">Pilih Rekomendasi</option>
+                                @foreach ($anggota_tapm as $anggota)
+                                    <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('penerima_id')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="mb-4">
                             <label for="tanggal_kegiatan" class="block text-gray-700 text-sm font-bold mb-2">Tanggal
                                 Kegiatan</label>
@@ -139,14 +125,14 @@
                         </div>
                     @elseif ($recipientType == 'external')
                         <div class="mb-4">
-                            <label for="penerima_id"
+                            <label for="penerima_eksternal"
                                 class="block text
                     -gray-700 text-sm font-bold mb-2">Penerima
                                 Eksternal</label>
-                            <input wire:model="penerima_name" type="text"
+                            <input wire:model="penerima_eksternal" type="text"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="penerima_id" placeholder="Masukkan Nama Penerima">
-                            @error('penerima_id')
+                                id="penerima_eksternal" placeholder="Masukkan Nama Penerima">
+                            @error('penerima_eksternal')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
@@ -186,7 +172,7 @@
                             </x-button>
                         @endif
                     </div>
-                @elseif ($jenis_surat == 'masuk')
+                @elseif ($jenis_surat == 'Surat Masuk')
                     <div class="mb-4">
                         <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Nama
                             Pengirim</label>

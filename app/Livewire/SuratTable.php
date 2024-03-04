@@ -7,6 +7,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -167,7 +168,7 @@ final class SuratTable extends PowerGridComponent
                 </svg>
             '))
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700 w-full')
-                ->openModal('surat-form', ['type' => 'masuk']);
+                ->openModal('surat-form', ['type' => 'Surat Masuk']);
 
             $header[] = Button::add('add-surat-keluar')
                 ->slot(__('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -175,7 +176,7 @@ final class SuratTable extends PowerGridComponent
                 </svg>
             '))
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700 w-full')
-                ->openModal('surat-form', ['type' => 'keluar']);
+                ->openModal('surat-form', ['type' => 'Surat Keluar']);
         }
 
         if (auth()->user()->can('export')) {
@@ -192,7 +193,7 @@ final class SuratTable extends PowerGridComponent
         return $header;
     }
 
-    public function gitlisteners()
+    public function getlisteners()
     {
         return array_merge(
             parent::getListeners(),
@@ -227,8 +228,12 @@ final class SuratTable extends PowerGridComponent
     public function delete($rowId)
     {
         $surat = Surat::findOrFail($rowId);
+        if ($surat->file_surat) {
+            Storage::disk('public')->delete('surat/' . $surat->file_surat);
+        }
+
         $surat->delete();
 
-        $this->toast('success', 'Surat berhasil dihapus');
+        $this->success('Surat berhasil dihapus');
     }
 }
