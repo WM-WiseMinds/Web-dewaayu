@@ -26,6 +26,8 @@ return new class extends Migration
             $table->enum('jenis_surat', ['Surat Masuk', 'Surat Keluar']);
             // ini adalah kolom untuk menyimpan atribut pengirim eksternal
             $table->string('pengirim_eksternal')->nullable();
+            // Ini adalah kolom untuk menyimpan atribut penerima eksternal
+            $table->string('penerima_eksternal')->nullable();
             //ini adalah kolom tabel untuk menyimpan atribut perihal
             $table->string('perihal');
             //ini adalah kolom tabel untuk menyimpan atribut tanggal_kegiatan

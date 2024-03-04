@@ -87,7 +87,70 @@ class SuratForm extends ModalComponent
             if ($this->file_surat) {
                 $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
             }
+        } elseif ($this->role == 'Operator') {
+            $this->pengirim_id = Auth::user()->id;
+            $this->pengirim_name = Auth::user()->name;
+            // $this->desa_id = Desa::all()->pluck('id')->toArray();
+            // $this->desa_name = Desa::all()->pluck('nama_desa')->toArray();
+            $this->rekomendasi_id = $this->surat->rekomendasi_id;
+            $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
+            $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Koor TAPM');
+            })->first();
+
+            if ($this->koordinatorTAPM) {
+                $this->penerima_id = $this->koordinatorTAPM->id;
+                $this->penerima_name = $this->koordinatorTAPM->name;
+            }
+            $this->anggota_tapm = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Anggota TAPM');
+            })->get();
+            $this->perihal = $this->surat->perihal;
+            $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
+            $this->hari = $this->surat->hari;
+            $this->waktu = $this->surat->waktu;
+            $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
+            $this->jenis_surat = $type;
+            $this->status = $this->surat->status;
+            $this->file_surat = $this->surat->file_surat;
+            if ($this->file_surat) {
+                $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
+            }
+        } elseif ($this->role == 'Koor TAPM') {
+            $this->pengirim_id = $this->surat->pengirim_id;
+            $this->penerima_id = $this->surat->penerima_id;
+            $this->desa_id = $this->surat->desa_id;
+            $this->rekomendasi_id = $this->surat->rekomendasi_id;
+            $this->perihal = $this->surat->perihal;
+            $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
+            $this->hari = $this->surat->hari;
+            $this->waktu = $this->surat->waktu;
+            $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
+            $this->jenis_surat = $this->surat->jenis_surat;
+            $this->status = $this->surat->status;
+            $this->file_surat = $this->surat->file_surat;
+            if ($this->file_surat) {
+                $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
+            }
+        } elseif ($this->role == 'Anggota TAPM') {
+            $this->pengirim_id = $this->surat->pengirim_id;
+            $this->penerima_id = $this->surat->penerima_id;
+            $this->desa_id = $this->surat->desa_id;
+            $this->rekomendasi_id = $this->surat->rekomendasi_id;
+            $this->perihal = $this->surat->perihal;
+            $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
+            $this->hari = $this->surat->hari;
+            $this->waktu = $this->surat->waktu;
+            $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
+            $this->jenis_surat = $this->surat->jenis_surat;
+            $this->status = $this->surat->status;
+            $this->file_surat = $this->surat->file_surat;
+            if ($this->file_surat) {
+                $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
+            }
         }
+
+        dump($this->role);
     }
 
     public function render()

@@ -16,7 +16,7 @@ class DesaSeeder extends Seeder
         Desa::factory()->count(10)->create();
 
         Desa::factory()->create([
-            'user_id' => 16,
+            'user_id' => 26,
             'nama_desa' => 'Desa A',
         ]);
     }
