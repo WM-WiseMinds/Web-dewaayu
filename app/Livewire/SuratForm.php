@@ -7,6 +7,7 @@ use App\Models\Sekretarisdesa;
 use App\Models\Surat;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
@@ -20,7 +21,8 @@ class SuratForm extends ModalComponent
 
     public Surat $surat;
 
-    public $id, $users, $desas, $pengirim_id, $penerima_id, $desa_id, $rekomendasi_id, $jenis_surat, $pengirim_eksternal, $perihal, $tanggal_kegiatan, $hari, $waktu, $lokasi_kegiatan, $status, $file_surat, $role, $pengirim_name, $penerima_name, $desa_name, $koordinatorTAPM, $anggota_tapm, $type, $file_url;
+    public $id, $users, $desas, $pengirim_id, $penerima_id, $desa_id, $rekomendasi_id, $jenis_surat, $pengirim_eksternal, $perihal, $tanggal_kegiatan, $hari, $waktu, $lokasi_kegiatan, $status, $file_surat, $role, $pengirim_name, $penerima_name, $desa_name, $koordinatorTAPM, $anggota_tapm, $type, $file_url, $sekretarisDesa;
+    public $recipientType = 'internal';
 
     public function getUserRole()
     {
@@ -43,20 +45,6 @@ class SuratForm extends ModalComponent
         $this->users = User::all();
         $this->desas = Desa::all();
         $this->id = $this->surat->id;
-        // $this->type = $type;
-        // $this->pengirim_id = $this->surat->pengirim_id;
-        // $this->penerima_id = $this->surat->penerima_id;
-        // $this->desa_id = $this->surat->desa_id;
-        // $this->jenis_surat = $this->surat->jenis_surat;
-        // $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
-        // $this->perihal = $this->surat->perihal;
-        // $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
-        // $this->hari = $this->surat->hari;
-        // $this->waktu = $this->surat->waktu;
-        // $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
-        // $this->status = $this->surat->status;
-        // $this->file_surat = $this->surat->file_surat;
-
         $this->role = $this->getUserRole();
 
         if ($this->role == 'Sekretaris Desa') {
@@ -90,8 +78,6 @@ class SuratForm extends ModalComponent
         } elseif ($this->role == 'Operator') {
             $this->pengirim_id = Auth::user()->id;
             $this->pengirim_name = Auth::user()->name;
-            // $this->desa_id = Desa::all()->pluck('id')->toArray();
-            // $this->desa_name = Desa::all()->pluck('nama_desa')->toArray();
             $this->rekomendasi_id = $this->surat->rekomendasi_id;
             $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
             $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
@@ -117,8 +103,9 @@ class SuratForm extends ModalComponent
                 $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
             }
         } elseif ($this->role == 'Koor TAPM') {
-            $this->pengirim_id = $this->surat->pengirim_id;
-            $this->penerima_id = $this->surat->penerima_id;
+            $this->pengirim_id = Auth::user()->id;
+            $this->pengirim_name = Auth::user()->name;
+            // $this->penerima_id = Auth::user()->name;
             $this->desa_id = $this->surat->desa_id;
             $this->rekomendasi_id = $this->surat->rekomendasi_id;
             $this->perihal = $this->surat->perihal;
@@ -127,13 +114,19 @@ class SuratForm extends ModalComponent
             $this->waktu = $this->surat->waktu;
             $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
             $this->jenis_surat = $this->surat->jenis_surat;
+            $this->jenis_surat = $type;
             $this->status = $this->surat->status;
+            // Mendapatkan array user dengan role sekretaris desa
+            $this->sekretarisDesa = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Sekretaris Desa');
+            })->get();
+
             $this->file_surat = $this->surat->file_surat;
             if ($this->file_surat) {
                 $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
             }
         } elseif ($this->role == 'Anggota TAPM') {
-            $this->pengirim_id = $this->surat->pengirim_id;
+            $this->pengirim_id = Auth::user()->id;
             $this->penerima_id = $this->surat->penerima_id;
             $this->desa_id = $this->surat->desa_id;
             $this->rekomendasi_id = $this->surat->rekomendasi_id;
@@ -150,7 +143,7 @@ class SuratForm extends ModalComponent
             }
         }
 
-        dump($this->role);
+        // dump($this->sekrertarisDesa);
     }
 
     public function render()
@@ -231,5 +224,28 @@ class SuratForm extends ModalComponent
         $this->success($this->surat->wasRecentlyCreated ? 'Surat berhasil dibuat' : 'Surat berhasil diupdate');
 
         $this->resetForm();
+    }
+
+    public function updateRecipientType()
+    {
+        if ($this->recipientType == 'external') {
+            $this->penerima_name = null;
+        }
+
+        Log::info('Jenis Penerima: ' . $this->recipientType);
+    }
+
+    public function updatePenerima()
+    {
+        $sekretarisDesa = User::whereHas('roles', function ($query) {
+            $query->where('name', 'Sekretaris Desa');
+        })->whereHas('desa', function ($query) {
+            $query->where('id', $this->desa_id);
+        })->first();
+
+        if ($sekretarisDesa) {
+            $this->penerima_id = $sekretarisDesa->id;
+            $this->penerima_name = $sekretarisDesa->name;
+        }
     }
 }

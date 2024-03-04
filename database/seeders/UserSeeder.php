@@ -22,7 +22,6 @@ class UserSeeder extends Seeder
             'password' => bcrypt('Password'),
         ]);
         $admin->assignRole('Sekretaris Desa');
-        $admin->removeRole('Operator');
 
         // Create Koordinator TAPM user
         $koordinatorTAPM = User::factory()->create([
@@ -31,7 +30,7 @@ class UserSeeder extends Seeder
             'password' => bcrypt('Password'),
         ]);
         $koordinatorTAPM->assignRole('Koor TAPM');
-        $koordinatorTAPM->removeRole('Operator');
+        $koordinatorTAPM->removeRole('Sekretaris Desa');
 
         // Create 3 Anggota TAPM users
         for ($i = 1; $i <= 3; $i++) {
@@ -41,7 +40,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('Password'),
             ]);
             $anggotaTAPM->assignRole('Anggota TAPM');
-            $anggotaTAPM->removeRole('Operator');
+            $anggotaTAPM->removeRole('Sekretaris Desa');
         }
     }
 }

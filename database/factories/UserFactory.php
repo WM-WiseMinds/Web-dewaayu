@@ -76,7 +76,7 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(function (User $user) {
             // Assign the role to the user
-            $role = Role::firstOrCreate(['name' => 'Operator']);
+            $role = Role::firstOrCreate(['name' => 'Sekretaris Desa']);
             $user->assignRole($role);
         });
     }

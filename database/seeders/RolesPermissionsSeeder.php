@@ -36,7 +36,7 @@ class RolesPermissionsSeeder extends Seeder
             ->givePermissionTo(['konfirmasi', 'read']);
 
         $role = Role::create(['name' => 'Koor TAPM'])
-            ->givePermissionTo(['konfirmasi', 'read']);
+            ->givePermissionTo(['konfirmasi', 'read', 'create', 'update', 'delete', 'penugasan']);
 
         $role = Role::create(['name' => 'Sekretaris Desa']);
         $role->givePermissionTo(Permission::all());
