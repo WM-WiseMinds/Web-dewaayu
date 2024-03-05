@@ -80,7 +80,6 @@ class SuratForm extends ModalComponent
             }
         } elseif ($this->role == 'Operator') {
             $this->jenis_surat = $rowId ? $this->surat->jenis_surat : $type;
-            $this->status = $rowId ? $this->surat->status : 'Dikirim';
             $this->perihal = $this->surat->perihal;
             $this->file_surat = $this->surat->file_surat;
 
@@ -92,35 +91,11 @@ class SuratForm extends ModalComponent
                 $this->penerima_id = Auth::user()->id;
                 $this->penerima_name = Auth::user()->name;
                 $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
+                $this->status = $rowId ? $this->surat->status : 'Diterima';
             } elseif ($this->jenis_surat == 'Surat Keluar') {
                 $this->pengirim_id = Auth::user()->id;
                 $this->pengirim_name = Auth::user()->name;
-                // if ($this->recipientType == 'internal') {
-                //     $this->desa_id = $this->surat->desa_id;
-                //     $this->rekomendasi_id = $this->surat->rekomendasi_id;
-                //     $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
-                //         $query->where('name', 'Koor TAPM');
-                //     })->first();
-                //     if ($this->koordinatorTAPM) {
-                //         $this->penerima_id = $this->koordinatorTAPM->id;
-                //         $this->penerima_name = $this->koordinatorTAPM->name;
-                //     }
-
-                //     $this->anggota_tapm = User::whereHas(
-                //         'roles',
-                //         function ($query) {
-                //             $query->where('name', 'Anggota TAPM');
-                //         }
-                //     )->get();
-
-                //     $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
-                //     $this->hari = $this->surat->hari;
-                //     $this->waktu = $this->surat->waktu;
-                //     $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
-                // } else {
-                //     $this->penerima_eksternal = $this->surat->penerima_eksternal;
-                //     $this->recipientType = 'external';
-                // }
+                $this->status = $rowId ? $this->surat->status : 'Dikirim';
                 if (!is_null($this->surat->penerima_eksternal)) {
                     $this->recipientType = 'external';
                     $this->penerima_eksternal = $this->surat->penerima_eksternal;

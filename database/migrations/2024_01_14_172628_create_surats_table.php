@@ -39,7 +39,7 @@ return new class extends Migration
             //ini adalah kolom tabel untuk menyimpan atribut tempat_kegiatan
             $table->string('lokasi_kegiatan')->nullable();
             //ini adalah kolom tabel untuk menyimpan atribut status surat
-            $table->enum('status', ['Dikirim', 'Dikonfirmasi'])->default('Dikirim');
+            $table->enum('status', ['Dikirim', 'Diterima', 'Dikonfirmasi'])->default('Dikirim');
             //ini adalah kolom tabel untuk menyimpan atribut file surat
             $table->string('file_surat');
             //ini adalah kolom untuk otomatis mencatat waktu pembuatan dan pembaruan record

@@ -5,21 +5,16 @@
                 <td class="border px-4 py-2 text-sm font-semibold">Id</td>
                 <td class="border px-4 py-2">{{ $row->id }}</td>
             </tr>
-            @if ($row->pengirim)
+            <tr>
+                <td class="border px-4 py-2 text-sm font-semibold">Nama Pengirim</td>
+                <td class="border px-4 py-2">{{ $row->pengirim }}</td>
+            </tr>
+            @if ($row->no_hp_pengirim)
                 <tr>
-                    <td class="border px-4 py-2 text-sm font-semibold">Nama Pengirim</td>
-                    <td class="border px-4 py-2">{{ $row->pengirim }}</td>
-                </tr>
-                <tr>
-                    <td class="border px-4 py-2 text-sm font-semibold">No Telp</td>
+                    <td class="border px-4 py-2 text-sm font-semibold">No Telp Pengirim</td>
                     <td class="border px-4 py-2">{{ $row->no_hp_pengirim }}</td>
                 </tr>
                 <tr>
-                @else
-                <tr>
-                    <td class="border px-4 py-2 text-sm font-semibold">Nama Pengirim</td>
-                    <td class="border px-4 py-2">{{ $row->pengirim_eksternal }}</td>
-                </tr>
             @endif
 
             @if ($row->nama_desa)
@@ -29,21 +24,16 @@
                 </tr>
             @endif
 
-            @if ($row->penerima)
+            <tr>
+                <td class="border px-4 py-2 text-sm font-semibold">Nama Penerima</td>
+                <td class="border px-4 py-2">{{ $row->penerima }}</td>
+            </tr>
+            @if ($row->no_hp_penerima)
                 <tr>
-                    <td class="border px-4 py-2 text-sm font-semibold">Nama Penerima</td>
-                    <td class="border px-4 py-2">{{ $row->penerima }}</td>
-                </tr>
-                <tr>
-                    <td class="border px-4 py-2 text-sm font-semibold">No Telp</td>
+                    <td class="border px-4 py-2 text-sm font-semibold">No Telp Penerima</td>
                     <td class="border px-4 py-2">{{ $row->no_hp_penerima }}</td>
                 </tr>
                 <tr>
-                @else
-                <tr>
-                    <td class="border px-4 py-2 text-sm font-semibold">Nama Penerima</td>
-                    <td class="border px-4 py-2">{{ $row->penerima_eksternal }}</td>
-                </tr>
             @endif
             @if ($row->rekomendasi_id)
                 <tr>
@@ -90,6 +80,8 @@
                         <div class="badge badge-warning">{{ $row->status }}</div>
                     @elseif ($row->status == 'Dikonfirmasi')
                         <div class="badge badge-success">{{ $row->status }}</div>
+                    @elseif($row->status == 'Diterima')
+                        <div class="badge badge-primary">{{ $row->status }}</div>
                     @else
                         <span class="text-red-500">{{ $row->status }}</span>
                     @endif

@@ -34,7 +34,7 @@ class SuratFactory extends Factory
             'hari' => $this->faker->dayOfWeek,
             'waktu' => $this->faker->time(),
             'lokasi_kegiatan' => $this->faker->address,
-            'status' => $this->faker->randomElement(['Dikirim', 'Dikonfirmasi']),
+            'status' => $this->faker->randomElement(['Dikirim', 'Dikonfirmasi, Diterima']),
             'file_surat' => $this->faker->file('public/storage/source', 'public/storage/surat', false),
         ];
     }
