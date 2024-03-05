@@ -88,6 +88,10 @@
                 </td>
             </tr>
             <tr>
+                <td class="border px-4 py-2 text-sm font-semibold">Tanggal Dibuat</td>
+                <td class="border px-4 py-2">{{ $row->created_at_formatted }}</td>
+            </tr>
+            <tr>
                 <td class="border px-4 py-2 text-sm font-semibold">File Surat</td>
                 <td class="border px-4 py-2">
                     <a href="{{ asset('storage/surat/' . $row->file_surat) }}" target="_blank" download

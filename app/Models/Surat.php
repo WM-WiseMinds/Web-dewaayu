@@ -36,6 +36,15 @@ class Surat extends Model
     ];
 
     /**
+     * Atribut yang akan di-casting.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
+    /**
      * Relasi antara model Surat dan model User melalui FK pengirim_id.
      *
      * @return void

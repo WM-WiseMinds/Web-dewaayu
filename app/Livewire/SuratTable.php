@@ -103,14 +103,15 @@ final class SuratTable extends PowerGridComponent
             ->add('waktu')
             ->add('lokasi_kegiatan')
             ->add('status')
-            ->add('file_surat');
+            ->add('file_surat')
+            ->add('created_at_formatted', fn ($row) => $row->created_at->format('d-m-Y'));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id')
-                ->sortable(),
+            // Column::make('ID', 'id')
+            //     ->sortable(),
 
             Column::make('Nama Pengirim', 'pengirim')
                 ->searchable(),
@@ -123,6 +124,9 @@ final class SuratTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Status', 'status')
+                ->sortable(),
+
+            Column::make('Tanggal Dibuat', 'created_at_formatted')
                 ->sortable(),
 
             Column::action('Action')

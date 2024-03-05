@@ -50,18 +50,28 @@ class PenugasanForm extends ModalComponent
         ];
     }
 
-    public function save()
+    public function store()
     {
         $validatedData = $this->validate();
         $validatedData['status'] = $this->status;
 
         $this->penugasan = Penugasan::updateOrCreate(['id' => $this->id], $validatedData);
 
-        $this->success($this->penugasan->wasRecentlyCreated ? 'Penugasan berhasil ditambahkan' : 'Penugasan berhasil diubah');
+        if ($this->penugasan->wasRecentlyCreated) {
+            $surat = Surat::find($this->surat_id);
+            $surat->status = 'Dikonfirmasi';
+            $surat->save();
+
+            $this->success('Penugasan berhasil ditambahkan');
+        } else {
+            $this->success('Penugasan berhasil diubah');
+        }
         $this->closeModalWithEvents([
             PenugasanTable::class => 'penugasanUpdated',
         ]);
 
         $this->resetForm();
+
+        redirect()->route('penugasan');
     }
 }
