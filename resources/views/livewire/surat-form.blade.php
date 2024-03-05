@@ -2,20 +2,20 @@
     <form>
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="">
-                <div class="mb-4">
-                    <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Dibuat
-                        Oleh</label>
-                    <input wire:model="pengirim_id" type="hidden" readonly
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="exampleFormControlInput1">
-                    <input wire:model="pengirim_name" type="text" readonly
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="exampleFormControlInput1" placeholder="Masukkan Nama Pengirim">
-                    @error('user_id')
-                        <span class="text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
                 @if ($jenis_surat == 'Surat Keluar')
+                    <div class="mb-4">
+                        <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Dibuat
+                            Oleh</label>
+                        <input wire:model="pengirim_id" type="hidden" readonly
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="exampleFormControlInput1">
+                        <input wire:model="pengirim_name" type="text" readonly
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="exampleFormControlInput1" placeholder="Masukkan Nama Pengirim">
+                        @error('user_id')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
                     @if ($role == 'Operator')
                         <div class="mb-4">
                             <label for="recipient_type" class="block text-gray-700 text-sm font-bold mb-2">
@@ -126,8 +126,7 @@
                     @elseif ($recipientType == 'external')
                         <div class="mb-4">
                             <label for="penerima_eksternal"
-                                class="block text
-                    -gray-700 text-sm font-bold mb-2">Penerima
+                                class="block text-gray-700 text-sm font-bold mb-2">Penerima
                                 Eksternal</label>
                             <input wire:model="penerima_eksternal" type="text"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -137,7 +136,6 @@
                             @enderror
                         </div>
                     @endif
-
                     <div class="mb-4">
                         <label for="perihal" class="block text-gray-700 text-sm font-bold mb-2">Perihal</label>
                         <input wire:model="perihal" type="text"
@@ -147,8 +145,6 @@
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
-
-
                     <div class="mb-4">
                         <label for="exampleFormControlInput3" class="block text-gray-700 text-sm font-bold mb-2">File
                             Surat</label>
@@ -173,6 +169,20 @@
                         @endif
                     </div>
                 @elseif ($jenis_surat == 'Surat Masuk')
+                    <div class="mb-4">
+                        <label for="exampleFormControlInput1"
+                            class="block text-gray-700 text-sm font-bold mb-2">Dibuat
+                            Oleh</label>
+                        <input wire:model="penerima_id" type="hidden" readonly
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="exampleFormControlInput1">
+                        <input wire:model="penerima_name" type="text" readonly
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="exampleFormControlInput1" placeholder="Masukkan Nama Pengirim">
+                        @error('user_id')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
                     <div class="mb-4">
                         <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Nama
                             Pengirim</label>

@@ -79,31 +79,45 @@ class SuratForm extends ModalComponent
                 $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
             }
         } elseif ($this->role == 'Operator') {
-            $this->pengirim_id = Auth::user()->id;
-            $this->pengirim_name = Auth::user()->name;
-            $this->rekomendasi_id = $this->surat->rekomendasi_id;
-            $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
-            $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
-                $query->where('name', 'Koor TAPM');
-            })->first();
-
-            if ($this->koordinatorTAPM) {
-                $this->penerima_id = $this->koordinatorTAPM->id;
-                $this->penerima_name = $this->koordinatorTAPM->name;
-            }
-            $this->anggota_tapm = User::whereHas('roles', function ($query) {
-                $query->where('name', 'Anggota TAPM');
-            })->get();
-            $this->perihal = $this->surat->perihal;
-            $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
-            $this->hari = $this->surat->hari;
-            $this->waktu = $this->surat->waktu;
-            $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
             $this->jenis_surat = $rowId ? $this->surat->jenis_surat : $type;
             $this->status = $rowId ? $this->surat->status : 'Dikirim';
+            $this->perihal = $this->surat->perihal;
             $this->file_surat = $this->surat->file_surat;
+
             if ($this->file_surat) {
                 $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
+            }
+
+            if ($this->jenis_surat == 'Surat Masuk') {
+                $this->penerima_id = Auth::user()->id;
+                $this->penerima_name = Auth::user()->name;
+                $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
+            } elseif ($this->jenis_surat == 'Surat Keluar') {
+                $this->pengirim_id = Auth::user()->id;
+                $this->pengirim_name = Auth::user()->name;
+                $this->desa_id = $this->surat->desa_id;
+                $this->rekomendasi_id = $this->surat->rekomendasi_id;
+                $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
+                $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
+                    $query->where('name', 'Koor TAPM');
+                })->first();
+
+                if ($this->koordinatorTAPM) {
+                    $this->penerima_id = $this->koordinatorTAPM->id;
+                    $this->penerima_name = $this->koordinatorTAPM->name;
+                }
+
+                $this->anggota_tapm = User::whereHas(
+                    'roles',
+                    function ($query) {
+                        $query->where('name', 'Anggota TAPM');
+                    }
+                )->get();
+
+                $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
+                $this->hari = $this->surat->hari;
+                $this->waktu = $this->surat->waktu;
+                $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
             }
         } elseif ($this->role == 'Koor TAPM') {
             $this->pengirim_id = Auth::user()->id;
@@ -133,7 +147,7 @@ class SuratForm extends ModalComponent
             }
         }
 
-        // dump($this->sekrertarisDesa);
+        dump($this->jenis_surat);
     }
 
     public function render()
@@ -163,11 +177,8 @@ class SuratForm extends ModalComponent
     public function rules()
     {
         return [
-            'pengirim_id' => 'required|exists:users,id',
-            'rekomendasi_id' => [
-                isset($this->id) ? 'nullable' : 'required',
-                'exists:users,id',
-            ],
+            'pengirim_id' => 'nullable|exists:users,id',
+            'rekomendasi_id' => $this->jenis_surat == 'Surat Keluar' ? ($this->id ? 'nullable' : 'required') : 'nullable',
             'penerima_id' => [
                 isset($this->id) ? 'nullable' : 'required',
                 'exists:users,id',
@@ -187,14 +198,14 @@ class SuratForm extends ModalComponent
             'waktu' => 'nullable|string|max:255',
             'lokasi_kegiatan' => 'nullable|string|max:255',
             'status' => 'required',
-            'file_surat' => [
-                isset($this->id) && $this->file_surat instanceof UploadedFile ? 'file|mimes:pdf|max:2048' : 'nullable',
-            ],
+            'file_surat' => $this->file_surat instanceof UploadedFile ? ['file', 'mimes:pdf', 'max:2048'] : ['nullable'],
         ];
     }
 
     public function store()
     {
+        Log::info('Store Surat');
+        // dd(request()->all());
         $validatedData = $this->validate();
         $validatedData['status'] = $this->status;
 
