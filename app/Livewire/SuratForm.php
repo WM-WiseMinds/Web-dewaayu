@@ -207,12 +207,8 @@ class SuratForm extends ModalComponent
 
     public function store()
     {
-        Log::info('Store Surat');
-        // dd(request()->all());
         $validatedData = $this->validate();
         $validatedData['status'] = $this->status;
-
-        // dd($validatedData);
 
         if ($this->file_surat instanceof UploadedFile) {
             $originalName = pathinfo($this->file_surat->getClientOriginalName(), PATHINFO_FILENAME);

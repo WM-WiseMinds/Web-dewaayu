@@ -26,7 +26,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get( '/permissions', function () {
+    Route::get('/permissions', function () {
         return view('permissions');
     })->name('permissions');
 
@@ -45,8 +45,16 @@ Route::middleware([
     Route::get('/surat', function () {
         return view('surat');
     })->name('surat');
-    
+
     Route::get('/penjadwalan', function () {
         return view('penjadwalan');
     })->name('penjadwalan');
+
+    Route::get('/penugasan', function () {
+        return view('penugasan');
+    })->name('penugasan');
+
+    Route::get('/desa', function () {
+        return view('desa');
+    })->name('desa');
 });
