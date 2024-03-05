@@ -35,6 +35,9 @@ final class SuratTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->view('details.surat-detail')
+                ->showCollapseIcon(),
         ];
 
         if (auth()->user()->can('export')) {
@@ -48,7 +51,7 @@ final class SuratTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Surat::query()->with(['pengirim', 'penerima', 'desa']);
+        return Surat::query()->with(['pengirim', 'penerima', 'rekomendasi', 'desa']);
     }
 
     public function relationSearch(): array
@@ -66,11 +69,18 @@ final class SuratTable extends PowerGridComponent
             ->add('id')
             ->add('pengirim_id')
             ->add('penerima_id')
-            ->add('pengirim', fn ($row) => $row->pengirim->name)
-            ->add('penerima', fn ($row) => $row->penerima->name)
+            ->add('rekomendasi_id')
             ->add('desa_id')
-            ->add('jenis_surat')
             ->add('pengirim_eksternal')
+            ->add('nama_desa', fn ($row) => $row->desa ? $row->desa->nama_desa : null)
+            ->add('jenis_surat')
+            ->add('pengirim', fn ($row) => $row->pengirim ? $row->pengirim->name : null)
+            ->add('penerima', fn ($row) => $row->penerima ? $row->penerima->name : null)
+            ->add('no_hp_pengirim', fn ($row) => $row->pengirim ? $row->pengirim->no_hp : null)
+            ->add('no_hp_penerima', fn ($row) => $row->penerima ? $row->penerima->no_hp : null)
+            ->add('rekomendasi', fn ($row) => $row->rekomendasi ? $row->rekomendasi->name : null)
+            ->add('pengirim_eksternal')
+            ->add('penerima_eksternal')
             ->add('perihal')
             ->add('tanggal_kegiatan')
             ->add('hari')
@@ -83,6 +93,9 @@ final class SuratTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+            Column::make('ID', 'id')
+                ->sortable(),
+
             Column::make('Nama Pengirim', 'pengirim')
                 ->searchable(),
 
@@ -162,13 +175,15 @@ final class SuratTable extends PowerGridComponent
         $header = [];
 
         if (auth()->user()->can('create')) {
-            $header[] = Button::add('add-surat-masuk')
-                ->slot(__('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
-                </svg>
-            '))
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700 w-full')
-                ->openModal('surat-form', ['type' => 'Surat Masuk']);
+            if (auth()->user()->hasRole('Operator')) {
+                $header[] = Button::add('add-surat-masuk')
+                    ->slot(__('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
+                    </svg>
+                '))
+                    ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700 w-full')
+                    ->openModal('surat-form', ['type' => 'Surat Masuk']);
+            }
 
             $header[] = Button::add('add-surat-keluar')
                 ->slot(__('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">

@@ -6,6 +6,7 @@ use App\Models\Desa;
 use App\Models\Sekretarisdesa;
 use App\Models\Surat;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -108,6 +109,7 @@ class SuratForm extends ModalComponent
             $this->pengirim_id = Auth::user()->id;
             $this->pengirim_name = Auth::user()->name;
             $this->desa_id = $this->surat->desa_id;
+            $this->penerima_id = $rowId ? $this->surat->penerima->id : '';
             $this->penerima_name = $rowId ? $this->surat->penerima->name : '';
             $this->rekomendasi_id = $this->surat->rekomendasi_id;
             $this->perihal = $this->surat->perihal;
@@ -162,8 +164,12 @@ class SuratForm extends ModalComponent
     {
         return [
             'pengirim_id' => 'required|exists:users,id',
+            'rekomendasi_id' => [
+                isset($this->id) ? 'nullable' : 'required',
+                'exists:users,id',
+            ],
             'penerima_id' => [
-                'required',
+                isset($this->id) ? 'nullable' : 'required',
                 'exists:users,id',
                 function ($attribute, $value, $fail) {
                     if ($value == $this->pengirim_id) {
@@ -171,7 +177,6 @@ class SuratForm extends ModalComponent
                     }
                 },
             ],
-            'rekomendasi_id' => 'nullable|exists:users,id',
             'desa_id' => 'nullable|exists:desa,id',
             'jenis_surat' => 'required',
             'pengirim_eksternal' => 'nullable|string|max:255',
@@ -182,7 +187,9 @@ class SuratForm extends ModalComponent
             'waktu' => 'nullable|string|max:255',
             'lokasi_kegiatan' => 'nullable|string|max:255',
             'status' => 'required',
-            'file_surat' => 'nullable|file|mimes:pdf|max:2048',
+            'file_surat' => [
+                isset($this->id) && $this->file_surat instanceof UploadedFile ? 'file|mimes:pdf|max:2048' : 'nullable',
+            ],
         ];
     }
 
@@ -193,7 +200,7 @@ class SuratForm extends ModalComponent
 
         // dd($validatedData);
 
-        if ($this->file_surat) {
+        if ($this->file_surat instanceof UploadedFile) {
             $originalName = pathinfo($this->file_surat->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = $this->file_surat->getClientOriginalExtension();
             $fileName = $originalName . '_' . time() . '.' . $extension;
