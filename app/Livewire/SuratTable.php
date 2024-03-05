@@ -51,7 +51,25 @@ final class SuratTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Surat::query()->with(['pengirim', 'penerima', 'rekomendasi', 'desa']);
+        $query = Surat::query()->with(['pengirim', 'penerima', 'rekomendasi', 'desa']);
+
+        $user = auth()->user();
+        if ($user->hasRole('Sekretaris Desa')) {
+            $query->where(function ($query) use ($user) {
+                $query->where('pengirim_id', $user->id)
+                    ->orWhere('penerima_id', $user->id)
+                    ->orWhereHas('desa', function ($query) use ($user) {
+                        $query->where('nama_desa', $user->desa->nama_desa);
+                    });
+            });
+        } elseif ($user->hasRole('Koor TAPM')) {
+            $query->where(function ($query) use ($user) {
+                $query->where('pengirim_id', $user->id)
+                    ->orWhere('penerima_id', $user->id);
+            });
+        }
+
+        return $query;
     }
 
     public function relationSearch(): array
