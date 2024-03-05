@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
-            'no_hp' => $this->faker->numerify('##########'),
+            'no_hp' => $this->faker->phoneNumber(),
             'alamat' => $this->faker->address(),
             'current_team_id' => null,
         ];
