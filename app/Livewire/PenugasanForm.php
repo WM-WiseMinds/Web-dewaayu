@@ -66,6 +66,10 @@ class PenugasanForm extends ModalComponent
 
             if ($this->penugasan->wasRecentlyCreated) {
                 $this->success('Penugasan berhasil ditambahkan');
+
+                $surat = Surat::find($this->surat_id);
+                $surat->status = 'Dikonfirmasi';
+                $surat->save();
             } else {
                 $this->success('Penugasan berhasil diubah');
             }
