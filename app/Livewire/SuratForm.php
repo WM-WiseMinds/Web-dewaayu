@@ -64,6 +64,8 @@ class SuratForm extends ModalComponent
             $this->anggota_tapm = User::whereHas('roles', function ($query) {
                 $query->where('name', 'Anggota TAPM');
             })->get();
+
+            $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
             $this->perihal = $this->surat->perihal;
             $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
             $this->hari = $this->surat->hari;
@@ -180,7 +182,7 @@ class SuratForm extends ModalComponent
             'waktu' => 'nullable|string|max:255',
             'lokasi_kegiatan' => 'nullable|string|max:255',
             'status' => 'required',
-            'file_surat' => 'required|file|mimes:pdf|max:2048',
+            'file_surat' => 'nullable|file|mimes:pdf|max:2048',
         ];
     }
 
@@ -189,7 +191,7 @@ class SuratForm extends ModalComponent
         $validatedData = $this->validate();
         $validatedData['status'] = $this->status;
 
-        // dd($validatedData);
+        dd($validatedData);
 
         if ($this->file_surat) {
             $originalName = pathinfo($this->file_surat->getClientOriginalName(), PATHINFO_FILENAME);
@@ -202,6 +204,8 @@ class SuratForm extends ModalComponent
 
             $this->file_surat->storeAs('public/surat', $fileName);
             $validatedData['file_surat'] = $fileName;
+        } else {
+            $validatedData['file_surat'] = $this->surat->file_surat;
         }
 
         $this->surat = Surat::updateOrCreate(['id' => $this->id], $validatedData);
