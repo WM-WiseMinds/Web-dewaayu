@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Penjadwalan;
 use App\Models\Penugasan;
 use App\Models\Surat;
 use App\Models\User;
@@ -57,6 +58,20 @@ class PenugasanForm extends ModalComponent
             $this->penugasan->status = $this->status;
             $this->penugasan->save();
 
+            if ($this->status == 'Disetujui') {
+                Penjadwalan::create([
+                    'user_id' => $this->penugasan->user_id,
+                    'penugasan_id' => $this->penugasan->id,
+                ]);
+
+                redirect()->route('penjadwalan');
+
+                $this->success('Penjadwalan berhasil ditambahkan');
+            } else {
+                Penjadwalan::where('penugasan_id', $this->penugasan->id)->delete();
+
+                $this->success('Penjadwalan berhasil dihapus');
+            }
             $this->success('Status penugasan berhasil diubah');
         } else {
             $validatedData = $this->validate();
