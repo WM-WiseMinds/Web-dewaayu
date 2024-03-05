@@ -95,29 +95,59 @@ class SuratForm extends ModalComponent
             } elseif ($this->jenis_surat == 'Surat Keluar') {
                 $this->pengirim_id = Auth::user()->id;
                 $this->pengirim_name = Auth::user()->name;
-                $this->desa_id = $this->surat->desa_id;
-                $this->rekomendasi_id = $this->surat->rekomendasi_id;
-                $this->pengirim_eksternal = $this->surat->pengirim_eksternal;
-                $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
-                    $query->where('name', 'Koor TAPM');
-                })->first();
+                // if ($this->recipientType == 'internal') {
+                //     $this->desa_id = $this->surat->desa_id;
+                //     $this->rekomendasi_id = $this->surat->rekomendasi_id;
+                //     $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
+                //         $query->where('name', 'Koor TAPM');
+                //     })->first();
+                //     if ($this->koordinatorTAPM) {
+                //         $this->penerima_id = $this->koordinatorTAPM->id;
+                //         $this->penerima_name = $this->koordinatorTAPM->name;
+                //     }
 
-                if ($this->koordinatorTAPM) {
-                    $this->penerima_id = $this->koordinatorTAPM->id;
-                    $this->penerima_name = $this->koordinatorTAPM->name;
-                }
+                //     $this->anggota_tapm = User::whereHas(
+                //         'roles',
+                //         function ($query) {
+                //             $query->where('name', 'Anggota TAPM');
+                //         }
+                //     )->get();
 
-                $this->anggota_tapm = User::whereHas(
-                    'roles',
-                    function ($query) {
-                        $query->where('name', 'Anggota TAPM');
+                //     $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
+                //     $this->hari = $this->surat->hari;
+                //     $this->waktu = $this->surat->waktu;
+                //     $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
+                // } else {
+                //     $this->penerima_eksternal = $this->surat->penerima_eksternal;
+                //     $this->recipientType = 'external';
+                // }
+                if (!is_null($this->surat->penerima_eksternal)) {
+                    $this->recipientType = 'external';
+                    $this->penerima_eksternal = $this->surat->penerima_eksternal;
+                } else {
+                    $this->recipientType = 'internal';
+                    $this->desa_id = $this->surat->desa_id;
+                    $this->rekomendasi_id = $this->surat->rekomendasi_id;
+                    $this->koordinatorTAPM = User::whereHas('roles', function ($query) {
+                        $query->where('name', 'Koor TAPM');
+                    })->first();
+                    if ($this->koordinatorTAPM) {
+                        $this->penerima_id = $this->koordinatorTAPM->id;
+                        $this->penerima_name = $this->koordinatorTAPM->name;
                     }
-                )->get();
 
-                $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
-                $this->hari = $this->surat->hari;
-                $this->waktu = $this->surat->waktu;
-                $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
+                    $this->anggota_tapm = User::whereHas(
+                        'roles',
+                        function ($query) {
+                            $query->where('name', 'Anggota TAPM');
+                        }
+                    )->get();
+
+                    $this->tanggal_kegiatan = $this->surat->tanggal_kegiatan;
+                    $this->hari = $this->surat->hari;
+                    $this->waktu = $this->surat->waktu;
+                    $this->lokasi_kegiatan = $this->surat->lokasi_kegiatan;
+                }
             }
         } elseif ($this->role == 'Koor TAPM') {
             $this->pengirim_id = Auth::user()->id;
@@ -146,8 +176,6 @@ class SuratForm extends ModalComponent
                 $this->file_url = Storage::disk('public')->url('surat/' . $this->file_surat);
             }
         }
-
-        dump($this->jenis_surat);
     }
 
     public function render()
@@ -178,9 +206,9 @@ class SuratForm extends ModalComponent
     {
         return [
             'pengirim_id' => 'nullable|exists:users,id',
-            'rekomendasi_id' => $this->jenis_surat == 'Surat Keluar' ? ($this->id ? 'nullable' : 'required') : 'nullable',
+            'rekomendasi_id' => $this->jenis_surat == 'Surat Keluar' && $this->recipientType == 'internal' ? 'required' : 'nullable',
             'penerima_id' => [
-                isset($this->id) ? 'nullable' : 'required',
+                $this->jenis_surat == 'Surat Masuk' || ($this->jenis_surat == 'Surat Keluar' && $this->recipientType == 'internal') ? 'required' : 'nullable',
                 'exists:users,id',
                 function ($attribute, $value, $fail) {
                     if ($value == $this->pengirim_id) {
@@ -191,7 +219,7 @@ class SuratForm extends ModalComponent
             'desa_id' => 'nullable|exists:desa,id',
             'jenis_surat' => 'required',
             'pengirim_eksternal' => 'nullable|string|max:255',
-            'penerima_eksternal' => 'nullable|string|max:255',
+            'penerima_eksternal' => $this->jenis_surat == 'Surat Keluar' && $this->recipientType == 'external' ? 'required|string|max:255' : 'nullable',
             'perihal' => 'required|string|max:255',
             'tanggal_kegiatan' => 'nullable|date',
             'hari' => 'nullable|string|max:255',
@@ -241,6 +269,7 @@ class SuratForm extends ModalComponent
     {
         if ($this->recipientType == 'external') {
             $this->penerima_name = null;
+            $this->penerima_id = null;
         }
 
         Log::info('Jenis Penerima: ' . $this->recipientType);
@@ -248,15 +277,17 @@ class SuratForm extends ModalComponent
 
     public function updatePenerima()
     {
-        $sekretarisDesa = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Sekretaris Desa');
-        })->whereHas('desa', function ($query) {
-            $query->where('id', $this->desa_id);
-        })->first();
+        if (auth()->user()->hasRole('Koor TAPM')) {
+            $sekretarisDesa = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Sekretaris Desa');
+            })->whereHas('desa', function ($query) {
+                $query->where('id', $this->desa_id);
+            })->first();
 
-        if ($sekretarisDesa) {
-            $this->penerima_id = $sekretarisDesa->id;
-            $this->penerima_name = $sekretarisDesa->name;
+            if ($sekretarisDesa) {
+                $this->penerima_id = $sekretarisDesa->id;
+                $this->penerima_name = $sekretarisDesa->name;
+            }
         }
     }
 }
