@@ -172,7 +172,7 @@ class SuratForm extends ModalComponent
                 },
             ],
             'rekomendasi_id' => 'nullable|exists:users,id',
-            'desa_id' => 'required|exists:desa,id',
+            'desa_id' => 'nullable|exists:desa,id',
             'jenis_surat' => 'required',
             'pengirim_eksternal' => 'nullable|string|max:255',
             'penerima_eksternal' => 'nullable|string|max:255',
@@ -191,7 +191,7 @@ class SuratForm extends ModalComponent
         $validatedData = $this->validate();
         $validatedData['status'] = $this->status;
 
-        dd($validatedData);
+        // dd($validatedData);
 
         if ($this->file_surat) {
             $originalName = pathinfo($this->file_surat->getClientOriginalName(), PATHINFO_FILENAME);
