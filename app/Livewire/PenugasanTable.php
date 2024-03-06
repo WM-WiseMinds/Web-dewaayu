@@ -51,7 +51,13 @@ final class PenugasanTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Penugasan::query()->with(['user', 'surat', 'surat.desa']);
+        $query = Penugasan::query()->with(['user', 'surat', 'surat.desa']);
+
+        if (auth()->user()->hasRole('Anggota TAPM')) {
+            $query->where('user_id', auth()->id());
+        }
+
+        return $query;
     }
 
     public function relationSearch(): array
