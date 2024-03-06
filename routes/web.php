@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Berita;
 use App\Models\Desa;
 use App\Models\Surat;
 use App\Models\User;
@@ -18,6 +19,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/struktur', function () {
+    return view('struktur');
+});
+
+Route::get('/beritas', function () {
+    $beritas = Berita::all();
+    return view('beritas', compact('beritas'));
 });
 
 Route::middleware([
