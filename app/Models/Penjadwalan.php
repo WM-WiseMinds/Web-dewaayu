@@ -35,4 +35,15 @@ class Penjadwalan extends Model
         // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model user
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Relasi antara model Penjadwalan dan model Penugasan.
+     *
+     * @return void
+     */
+    public function penugasan()
+    {
+        // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model penugasan
+        return $this->belongsTo(Penugasan::class);
+    }
 }

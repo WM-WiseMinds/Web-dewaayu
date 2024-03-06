@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Desa;
 use App\Models\Penjadwalan;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -42,58 +44,55 @@ final class PenjadwalanTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Penjadwalan::query()
-            ->leftJoin('users', 'penjadwalan.user_id', '=', 'users.id')
-            ->select('penjadwalan.*', 'users.name as name','users.no_hp as no_hp','users.alamat as alamat')
-        ;
+        return Penjadwalan::query()->with(['user', 'penugasan', 'penugasan.surat', 'penugasan.surat.desa']);
     }
 
     public function relationSearch(): array
     {
         return [
-        'users'=> ['name','no_hp','alamat']
+            'user' => ['name'],
+            'penugasan.surat.desa' => ['nama_desa'],
         ];
     }
 
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
-        
+
             ->add('id')
             ->add('user_id')
-            ->add('tanggal_kegiatan')
-            ->add('waktu_kegiatan')
-            ->add('detail_kegiatan')
-            ->add('lokasi_kegiatan')
-        ;
+            ->add('penugasan_id')
+            ->add('penugasan.surat.desa_id')
+            ->add('name', fn ($row) => $row->user->name)
+            ->add('tanggal_kegiatan', fn ($row) => Carbon::parse($row->penugasan->surat->tanggal_kegiatan)->format('d-m-Y'))
+            ->add('lokasi_kegiatan', fn ($row) => $row->penugasan->surat->lokasi_kegiatan)
+            ->add('nama_desa', fn ($row) => $row->penugasan->surat->desa->nama_desa)
+            ->add('created_at_formatted', fn ($row) => $row->created_at->format('d-m-Y'));
     }
 
     public function columns(): array
     {
         return [
-            column::make('Id','id')
+            Column::make('Id', 'id')
                 ->searchable()
                 ->sortable(),
 
-            column::make('Nama','name')
+            Column::make('Nama', 'name')
                 ->searchable()
                 ->sortable(),
 
-            column::make('Tanggal Kegiatan','tanggal_kegiatan')
+            Column::make('Tanggal Kegiatan', 'tanggal_kegiatan')
                 ->searchable()
                 ->sortable(),
 
-            column::make('Waktu Kegiatan','waktu_kegiatan')
+            Column::make('Lokasi Kegiatan', 'lokasi_kegiatan')
                 ->searchable()
                 ->sortable(),
 
-            // column::make('Detail Kegiatan','detail_kegiatan')  
-            //     ->searchable()
-            //     ->sortable(),
+            Column::make('Nama Desa', 'nama_desa')
+                ->searchable()
+                ->sortable(),
 
-            // column::make('Lokasi Kegiatan','lokasi_kegiatan')
-            //     ->searchable()
-            //     ->sortable(),
             Column::action('Action')
         ];
     }
@@ -101,13 +100,11 @@ final class PenjadwalanTable extends PowerGridComponent
     public function filters(): array
     {
         return [
+            Filter::select('name', 'user_id')
+                ->dataSource(User::role('Anggota TAPM')->get())
+                ->optionLabel('name')
+                ->optionValue('id'),
         ];
-    }
-
-    #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
-    {
-        $this->js('alert('.$rowId.')');
     }
 
     public function actions(\App\Models\Penjadwalan $row): array
@@ -161,36 +158,36 @@ final class PenjadwalanTable extends PowerGridComponent
                 'exportPdf',
                 'edit',
                 'penjadwalan-updated' => '$refresh',
-            ] 
+            ]
         );
     }
-    
-     // Function to export PDF using DomPDF
-     public function exportPdf()
-     {
-         $path = public_path() . '/pdf';
-         // Mendapatkan datasource
-         $datasource = $this->datasource()->get();
-         // Membuat folder pdf jika belum ada
-         if (!file_exists($path)) {
-             mkdir($path, 0777, true);
-         }
-         // Membuat file pdf
-         $pdf = Pdf::loadView('pdf.penjadwalan', ['datasource' => $datasource]);
-         // Menyimpan file pdf ke folder pdf
-         $pdf->save($path . '/penjadwalan.pdf');
-         // Menampilkan file pdf
-         return response()->download($path . '/penjadwalan.pdf');
-     }
- 
-     // Function to delete data
-     public function delete($rowId)
-     {
-         $penjadwalan = Penjadwalan::findOrFail($rowId);
-         // Detach all associated users
-         $penjadwalan->user()->detach();
-         $penjadwalan->delete();
-     }
+
+    // Function to export PDF using DomPDF
+    public function exportPdf()
+    {
+        $path = public_path() . '/pdf';
+        // Mendapatkan datasource
+        $datasource = $this->datasource()->get();
+        // Membuat folder pdf jika belum ada
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        // Membuat file pdf
+        $pdf = Pdf::loadView('pdf.penjadwalan', ['datasource' => $datasource]);
+        // Menyimpan file pdf ke folder pdf
+        $pdf->save($path . '/penjadwalan.pdf');
+        // Menampilkan file pdf
+        return response()->download($path . '/penjadwalan.pdf');
+    }
+
+    // Function to delete data
+    public function delete($rowId)
+    {
+        $penjadwalan = Penjadwalan::findOrFail($rowId);
+        // Detach all associated users
+        $penjadwalan->user()->detach();
+        $penjadwalan->delete();
+    }
 
 
     /*
