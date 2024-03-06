@@ -21,7 +21,7 @@ class DesaForm extends ModalComponent
         $this->id = $this->desa->id;
         $this->users = User::whereHas('roles', function ($query) {
             $query->where('name', 'Sekretaris Desa');
-        })->get();
+        })->doesntHave('desa')->get();
         $this->user_id = $this->desa->user_id;
         $this->nama_desa = $this->desa->nama_desa;
     }

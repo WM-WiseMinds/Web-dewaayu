@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Desa;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -19,6 +20,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 final class DesaTable extends PowerGridComponent
 {
     use WithExport;
+    use Toastable;
 
     public function setUp(): array
     {
@@ -138,5 +140,46 @@ final class DesaTable extends PowerGridComponent
                 ->dispatch('exportPdf', []);
         }
         return $header;
+    }
+
+    public function getlisteners()
+    {
+        return array_merge(
+            parent::getListeners(),
+            [
+                'delete',
+                'exportPdf',
+                'edit',
+                'desaUpdated' => '$refresh',
+            ]
+        );
+    }
+
+    // Function to export PDF using DomPDF
+    public function exportPdf()
+    {
+        $path = public_path() . '/pdf';
+        // Mendapatkan datasource
+        $datasource = $this->datasource()->get();
+        // Membuat folder pdf jika belum ada
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        // Membuat file pdf
+        $pdf = Pdf::loadView('pdf.desa', ['datasource' => $datasource]);
+        // Menyimpan file pdf ke folder pdf
+        $pdf->save($path . '/desa.pdf');
+        // Menampilkan file pdf
+        return response()->download($path . '/desa.pdf');
+    }
+
+    // Function to delete data
+    public function delete($rowId)
+    {
+        $desa = Desa::findOrFail($rowId);
+
+        $desa->delete();
+
+        $this->success('Desa berhasil dihapus');
     }
 }
