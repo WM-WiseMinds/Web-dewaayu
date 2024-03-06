@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Desa;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,13 +18,24 @@ class SuratFactory extends Factory
      */
     public function definition(): array
     {
+        $userIds = User::pluck('id')->toArray();
+        shuffle($userIds);
+
         return [
-            'user_id' => User::factory(),
+            'pengirim_id' => $userIds[0],
+            'penerima_id' => $userIds[1],
+            'rekomendasi_id' => $userIds[2],
+            'desa_id' => $this->faker->randomElement(Desa::pluck('id')->toArray()),
+            'jenis_surat' => $this->faker->randomElement(['Surat Masuk', 'Surat Keluar']),
+            'pengirim_eksternal' => $this->faker->name,
+            'penerima_eksternal' => $this->faker->name,
             'perihal' => $this->faker->sentence,
             'tanggal_kegiatan' => $this->faker->date(),
             'hari' => $this->faker->dayOfWeek,
-            'jam_kegiatan' => $this->faker->time(),
+            'waktu' => $this->faker->time(),
             'lokasi_kegiatan' => $this->faker->address,
+            'status' => $this->faker->randomElement(['Dikirim', 'Dikonfirmasi, Diterima']),
+            'file_surat' => $this->faker->file('public/storage/source', 'public/storage/surat', false),
         ];
     }
 }

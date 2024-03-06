@@ -18,13 +18,10 @@ class BeritaFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'judul_berita' => $this->faker->sentence,
-            'foto' => $this->faker->imageUrl(640, 480), // menghasilkan URL ke gambar acak dengan lebar 640px dan tinggi 480px
-            'deskripsi_berita' => $this->faker->paragraph,
-            'no_berita' => $this->faker->unique()->numberBetween(1000, 9000),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
+            'judul' => $this->faker->sentence,
+            'foto' => $this->faker->imageUrl(640, 480),
+            'deskripsi' => $this->faker->paragraph,
         ];
     }
 }

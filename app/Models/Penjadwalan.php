@@ -8,22 +8,42 @@ use Illuminate\Database\Eloquent\Model;
 // ini adalah model untuk penjadwalan
 class Penjadwalan extends Model
 {
-    // line ini adalah untuk menghubungkan model ini dengan tabel penjadwalan
+    // Trait ini memungkinkan model untuk menghasilkan instance model baru
     use HasFactory;
-    // line ini adalah untuk menentukan nama tabelnya
+
+    // ini adalah nama tabel yang akan digunakan oleh model
     protected $table = 'penjadwalan';
-    // line ini adalah untuk menentukan kolom yang bisa diisi atau di edit
+
+    /**
+     * Atribut yang dapat diisi.
+     *
+     * @var array
+     */
     protected $fillable = [
         'user_id',
-        'tanggal_kegiatan',
-        'waktu_kegiatan',
-        'detail_kegiatan',
-        'lokasi_kegiatan',
+        'penugasan_id',
 
     ];
+
+    /**
+     * Relasi antara model Penjadwalan dan model User.
+     *
+     * @return void
+     */
     public function user()
     {
         // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model user
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relasi antara model Penjadwalan dan model Penugasan.
+     *
+     * @return void
+     */
+    public function penugasan()
+    {
+        // line ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana  menghubungkan model ini dengan model penugasan
+        return $this->belongsTo(Penugasan::class);
     }
 }

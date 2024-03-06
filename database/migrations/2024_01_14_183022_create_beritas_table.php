@@ -17,12 +17,10 @@ return new class extends Migration
             // Ini adalah kolom 'user_id' yang akan menjadi foreign key, terhubung dengan tabel 'users'.
             // Juga, jika user terkait dihapus, record berita yang terkait juga akan dihapus ('onDelete' cascade).
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            // Ini adalah kolom 'no_berita' yang akan digunakan untuk menyimpan nomor berita.
-            $table->string('no_berita');
-            // Ini adalah kolom 'judul_berita' yang akan digunakan untuk menyimpan judul berita.
-            $table->string('judul_berita');
-            // Ini adalah kolom 'deskripsi_berita' yang akan digunakan untuk menyimpan deskripsi atau isi berita.
-            $table->string('deskripsi_berita');
+            // Ini adalah kolom 'judul' yang akan digunakan untuk menyimpan judul berita.
+            $table->string('judul');
+            // Ini adalah kolom 'deskripsi' yang akan digunakan untuk menyimpan deskripsi atau isi berita.
+            $table->text('deskripsi');
             // Ini adalah kolom 'foto' yang akan digunakan untuk menyimpan path atau nama file foto berita.
             $table->string('foto')->nullable();
             // Ini adalah kolom 'timestamps' yang otomatis akan mencatat waktu pembuatan dan pembaruan record.

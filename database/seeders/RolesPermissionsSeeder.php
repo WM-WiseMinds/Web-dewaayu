@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Roles;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolesPermissionsSeeder extends Seeder
 {
@@ -35,7 +36,7 @@ class RolesPermissionsSeeder extends Seeder
             ->givePermissionTo(['konfirmasi', 'read']);
 
         $role = Role::create(['name' => 'Koor TAPM'])
-            ->givePermissionTo(['konfirmasi', 'read']);
+            ->givePermissionTo(['konfirmasi', 'read', 'create', 'update', 'delete', 'penugasan']);
 
         $role = Role::create(['name' => 'Sekretaris Desa']);
         $role->givePermissionTo(Permission::all());

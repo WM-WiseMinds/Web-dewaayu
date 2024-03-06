@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Berita;
+use App\Models\Desa;
+use App\Models\Surat;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,16 +21,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/struktur', function () {
+    return view('struktur');
+});
+
+Route::get('/beritas', function () {
+    $beritas = Berita::all();
+    return view('beritas', compact('beritas'));
+});
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $desaCount = Desa::count();
+        $suratCount = Surat::count();
+        $userCount = User::count();
+        return view('dashboard', compact('desaCount', 'suratCount', 'userCount'));
     })->name('dashboard');
 
-    Route::get( '/permissions', function () {
+    Route::get('/permissions', function () {
         return view('permissions');
     })->name('permissions');
 
@@ -45,8 +61,16 @@ Route::middleware([
     Route::get('/surat', function () {
         return view('surat');
     })->name('surat');
-    
+
     Route::get('/penjadwalan', function () {
         return view('penjadwalan');
     })->name('penjadwalan');
+
+    Route::get('/penugasan', function () {
+        return view('penugasan');
+    })->name('penugasan');
+
+    Route::get('/desa', function () {
+        return view('desa');
+    })->name('desa');
 });

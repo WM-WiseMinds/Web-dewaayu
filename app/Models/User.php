@@ -32,8 +32,6 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-
-    // line baris dibawah ini adalah untuk menentukan kolom yang bisa diisi atau di edit
     protected $fillable = [
         'name',
         'email',
@@ -47,8 +45,6 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-
-    // line baris dibawah ini adalah untuk menentukan kolom yang tidak bisa diisi atau di edit
     protected $hidden = [
         'password',
         'remember_token',
@@ -61,8 +57,6 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-
-    // line baris dibawah ini adalah untuk menentukan kolom yang harus di cast
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -72,32 +66,59 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-
-    // line baris dibawah ini adalah untuk menentukan kolom yang harus di append
     protected $appends = [
         'profile_photo_url',
     ];
 
-
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model berita
+    /**
+     * Membuat relasi one to many dengan model Berita
+     *
+     * @return void
+     */
     public function berita()
     {
         // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model berita
         return $this->hasMany(Berita::class);
     }
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model surat
+
+    /**
+     * Membuat relasi one to many dengan model Surat
+     *
+     * @return void
+     */
     public function surat()
     {
         // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model surat
         return $this->hasMany(Surat::class);
     }
-    // line baris dibawah ini adalah untuk menghubungkan model ini dengan model penjadwalan
-    public function penjadwalan()
+
+    /**
+     * Membuat relasi one to many dengan model Desa
+     *
+     * @return void
+     */
+    public function desa()
     {
-        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model penjadwalan
-        return $this->hasMany(Penjadwalan::class);
+        // line baris dibawah ini adalah relasi one to many menggunakan hasOne yang dimana menghubungkan model ini dengan model desa
+        return $this->hasOne(Desa::class);
     }
 
+    /**
+     * Membuat relasi one to many dengan model Penugasan
+     *
+     * @return void
+     */
+    public function penugasan()
+    {
+        // line baris dibawah ini adalah relasi one to many menggunakan hasMany yang dimana menghubungkan model ini dengan model penugasan
+        return $this->hasMany(Penugasan::class);
+    }
+
+    /**
+     * Mengembalikan nama guard default.
+     *
+     * @return void
+     */
     protected function getDefaultGuardName(): string
     {
         return 'web';

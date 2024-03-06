@@ -6,63 +6,62 @@ use App\Models\Permissions;
 use App\Models\Roles;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Masmerise\Toaster\Toastable;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolesForm extends ModalComponent
 {
-    public $roles, $id, $name, $permissions;
-    public $permissions_id = [];
+    use Toastable;
+
+    public Role $role;
+    public $id, $name, $permissions;
+    public $permissions_list = [];
+
+    public function mount($rowId = null)
+    {
+        $this->role = Role::findOrNew($rowId);
+        $this->id = $this->role->id;
+        $this->name = $this->role->name;
+        $this->permissions = Permission::all();
+        $this->permissions_list = $this->role->permissions->pluck('name')->toArray();
+    }
 
     public function render()
     {
-        $permissions = Permissions::all(); // This ensures $permissions is always set
-        $roles = Roles::all();
-        return view('livewire.roles-form', compact('permissions', 'roles'));
+        return view('livewire.roles-form');
     }
 
-    public function resetCreateForm()
+    public function resetForm()
     {
+        $this->id = '';
         $this->name = '';
-        $this->permissions_id = [];
+        $this->permissions_list = [];
+    }
+
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255|unique:roles,name,' . $this->role->id,
+            'permissions_list' => 'required|array|min:1',
+        ];
     }
 
     public function store()
     {
-        $this->validate([
-            'name' => 'required|min:3',
-            'permissions_id' => 'required|array',
-        ]);
+        $validatedData = $this->validate();
+        $validatedData['guard_name'] = 'web';
 
-        if ($this->id) {
-            $role = Roles::find($this->id);
-            $role->update([
-                'name' => $this->name,
-            ]);
-            $role->permissions()->sync($this->permissions_id);
-        } else {
-            $role = Roles::create([
-                'name' => $this->name,
-            ]);
-            $role->permissions()->attach($this->permissions_id);
-        }
+        $this->role = Role::updateOrCreate(['id' => $this->id], $validatedData);
 
-        session()->flash('message', $this->roles ? 'Roles updated.' : 'Roles created.');
+        $this->role->syncPermissions($this->permissions_list);
 
         $this->closeModalWithEvents([
-            RolesTable::class => 'rolesUpdated',
+            RolesTable::class => 'roleUpdated',
         ]);
 
-        $this->resetCreateForm();
-    }
+        $this->success($this->role->wasRecentlyCreated ? 'Role berhasil dibuat' : 'Role berhasil diupdate');
 
-    public function mount($rowId = null)
-    {
-        $this->permissions = Permissions::all();
-        if (!is_null($rowId)) {
-            $this->permissions = Permissions::all();
-            $roles = Roles::findOrFail($rowId);
-            $this->id = $rowId;
-            $this->name = $roles->name;
-            $this->permissions_id = $roles->permissions->pluck('id')->toArray();
-        }
+        $this->resetForm();
     }
 }

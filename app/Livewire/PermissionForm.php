@@ -2,57 +2,57 @@
 
 namespace App\Livewire;
 
-use App\Models\Permissions;
-use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Masmerise\Toaster\Toastable;
+use Spatie\Permission\Models\Permission;
 
 class PermissionForm extends ModalComponent
 {
-    public $permissions, $id, $name;
+    use Toastable;
+
+    public Permission $permission;
+
+    public $id, $name;
+
+    public function mount($rowId = null)
+    {
+        $this->permission = Permission::findOrNew($rowId);
+        $this->id = $this->permission->id;
+        $this->name = $this->permission->name;
+    }
 
     public function render()
     {
-        $permissions = Permissions::all();
-        return view('livewire.permission-form', compact('permissions'));
+        return view('livewire.permission-form');
     }
 
-    public function resetCreateForm()
+    public function resetForm()
     {
+        $this->id = '';
         $this->name = '';
+    }
+
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255|unique:permissions,name,' . $this->permission->id,
+        ];
     }
 
     public function store()
     {
-        $this->validate([
-            'name' => 'required|min:3',
-        ]);
+        $validatedData = $this->validate();
+        $validatedData['guard_name'] = 'web';
 
-        if ($this->id) {
-            $permissions = Permissions::find($this->id);
-            $permissions->update([
-                'name' => $this->name,
-            ]);
-        } else {
-            Permissions::create([
-                'name' => $this->name,
-            ]);
-        }
-
-        session()->flash('message', $this->permissions ? 'Permissions updated.' : 'Permissions created.');
+        $this->permission->fill($validatedData);
+        $this->permission->save();
 
         $this->closeModalWithEvents([
-            PermissionTable::class => 'permissionsUpdated',
+            PermissionTable::class => 'permissionUpdated',
         ]);
 
-        $this->resetCreateForm();
-    }
+        $this->success($this->permission->wasRecentlyCreated ? 'Permission berhasil dibuat' : 'Permission berhasil diupdate');
 
-    public function mount($rowId = null)
-    {
-        if (!is_null($rowId)) {
-            $permissions = Permissions::findOrFail($rowId);
-            $this->id = $rowId;
-            $this->name = $permissions->name;
-        }
+        $this->resetForm();
     }
 }

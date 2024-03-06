@@ -16,14 +16,8 @@ return new class extends Migration
             $table->id();
             //ini adalah kolom untuk menghubungkan tabel penjadwalan dengan tabel user
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            //ini adalah kolom tabel untuk menyimpan atribut tanggal kegiatan
-            $table->date('tanggal_kegiatan');
-            //ini adalah kolom tabel untuk menyimpan atribut waktu kegiatan
-            $table->time('waktu_kegiatan');
-            //ini adalah kolom tabel untuk menyimpan atribut detail kegiatan
-            $table->string('detail_kegiatan');
-            //ini adalah kolom tabel untuk menyimpan atribut lokasi kegiatan
-            $table->string('lokasi_kegiatan');
+            //ini adalah kolom untuk menghubungkan tabel penjadwalan dengan tabel penugasan
+            $table->foreignId('penugasan_id')->constrained('penugasan')->onDelete('cascade');
             //ini adalah kolom tabel untuk melakukan otomatisasi pencatatan waktu pembuatan dan pembaruan record
             $table->timestamps();
         });
@@ -34,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penjadwalans');
+        Schema::dropIfExists('penjadwalan');
     }
 };
