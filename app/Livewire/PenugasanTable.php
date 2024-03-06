@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Footer;
@@ -34,6 +35,9 @@ final class PenugasanTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->view('details.penugasan-detail')
+                ->showCollapseIcon()
         ];
 
         if (auth()->user()->can('export')) {
@@ -65,8 +69,15 @@ final class PenugasanTable extends PowerGridComponent
             ->add('id')
             ->add('user_id')
             ->add('nama', fn ($row) => $row->user->name)
+            ->add('no_hp', fn ($row) => $row->user->no_hp)
             ->add('perihal', fn ($row) => $row->surat->perihal)
             ->add('desa', fn ($row) => $row->surat->desa->nama_desa)
+            ->add('tanggal_kegiatan', fn ($row) => Carbon::parse($row->surat->tanggal_kegiatan)->format('d-m-Y'))
+            ->add('waktu_kegiatan', fn ($row) => Carbon::parse($row->surat->waktu_kegiatan)->format('H:i'))
+            ->add('lokasi_kegiatan', fn ($row) => $row->surat->lokasi_kegiatan)
+            ->add('sekretaris_desa', fn ($row) => $row->surat->desa->user->name)
+            ->add('no_hp_sekdes', fn ($row) => $row->surat->desa->user->no_hp)
+            ->add('file_surat', fn ($row) => $row->surat->file_surat)
             ->add('surat_id')
             ->add('status')
             ->add('created_at_formatted', fn ($row) => Carbon::parse($row->created_at)->format('d-m-Y'));
@@ -210,6 +221,9 @@ final class PenugasanTable extends PowerGridComponent
         }
 
         $penugasan->delete();
+
+        // Kembalikan status surat menjadi 'Dikirim'
+        $penugasan->surat->update(['status' => 'Dikirim']);
 
         $this->success('Penugasan berhasil dihapus');
     }

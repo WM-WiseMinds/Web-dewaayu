@@ -111,8 +111,8 @@ final class SuratTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            // Column::make('ID', 'id')
-            //     ->sortable(),
+            Column::make('ID', 'id')
+                ->sortable(),
 
             Column::make('Nama Pengirim', 'pengirim')
                 ->searchable(),
