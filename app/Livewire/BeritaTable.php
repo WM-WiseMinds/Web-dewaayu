@@ -6,6 +6,8 @@ use App\Models\Berita;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
+use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Detail;
@@ -21,6 +23,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 final class BeritaTable extends PowerGridComponent
 {
     use WithExport;
+    use Toastable;
 
     public function setUp(): array
     {
@@ -144,7 +147,7 @@ final class BeritaTable extends PowerGridComponent
         ];
     }
 
-    public function gitlisteners()
+    public function getlisteners()
     {
         return array_merge(
             parent::getListeners(),
@@ -152,7 +155,7 @@ final class BeritaTable extends PowerGridComponent
                 'delete',
                 'exportPdf',
                 'edit',
-                'berita-updated' => '$refresh',
+                'beritaUpdated' => '$refresh',
             ]
         );
     }
@@ -179,21 +182,13 @@ final class BeritaTable extends PowerGridComponent
     public function delete($rowId)
     {
         $berita = Berita::findOrFail($rowId);
-        // Detach all associated users
-        $berita->user()->detach();
+
+        if ($berita->foto) {
+            Storage::disk('public')->delete('berita/' . $berita->foto);
+        }
+
         $berita->delete();
-    }
 
-
-    /*
-    public function actionRules($row): array
-    {
-       return [
-            // Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($row) => $row->id === 1)
-                ->hide(),
-        ];
+        $this->success('Berita berhasil dihapus');
     }
-    */
 }
