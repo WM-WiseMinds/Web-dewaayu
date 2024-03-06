@@ -49,7 +49,25 @@ final class PenjadwalanTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Penjadwalan::query()->with(['user', 'penugasan', 'penugasan.surat', 'penugasan.surat.desa']);
+        $query = Penjadwalan::query()->with(['user', 'penugasan', 'penugasan.surat', 'penugasan.surat.desa']);
+
+        // Get the currently logged-in user
+        $user = auth()->user();
+
+        // Check the role of the user and modify the query accordingly
+        if ($user->hasRole('Sekretaris Desa')) {
+            // If the user is a Sekretaris Desa, only show penjadwalan related to their Desa
+            $query->whereHas('penugasan.surat', function ($query) use ($user) {
+                $query->where('desa_id', $user->desa->id);
+            });
+        } elseif ($user->hasRole('Anggota TAPM')) {
+            // If the user is an Anggota TAPM, only show penjadwalan related to their user_id
+            $query->where('user_id', $user->id);
+        }
+
+        // If the user is an Operator or Koor TAPM, no additional filtering is needed
+
+        return $query;
     }
 
     public function relationSearch(): array
