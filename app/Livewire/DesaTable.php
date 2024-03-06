@@ -67,7 +67,8 @@ final class DesaTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Id', 'id')
+                ->sortable(),
             Column::make('Nama Desa', 'nama_desa')
                 ->sortable()
                 ->searchable(),

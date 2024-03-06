@@ -22,7 +22,7 @@
             </tr>
             <tr>
                 <td class="border px-4 py-2 text-sm font-semibold">Nama</td>
-                <td class="border px-4 py-2">{{ $row->name }}</td>
+                <td class="border px-4 py-2">{{ $row->user->name }}</td>
             </tr>
         </tbody>
     </table>
