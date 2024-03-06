@@ -54,7 +54,7 @@
 </style>
 
 <div class="text-center">
-    <h2>Daftar Izin Akses</h2>
+    <h2>Daftar Berita</h2>
 </div>
 <div class="divider"></div>
 <div class="text-right mb-20">
@@ -65,14 +65,18 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>Nama Izin</th>
+            <th>Judul</th>
+            <th>Penulis</th>
+            <th>Tanggal Pembuatan</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($datasource as $permission)
+        @foreach ($datasource as $berita)
             <tr>
-                <td>{{ $permission->id }}</td>
-                <td>{{ $permission->name }}</td>
+                <td>{{ $berita->id }}</td>
+                <td>{{ $berita->judul }}</td>
+                <td>{{ $berita->user->name }}</td>
+                <td>{{ $berita->created_at->format('d-m-Y') }}</td>
             </tr>
         @endforeach
     </tbody>

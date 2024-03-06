@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Masmerise\Toaster\Toastable;
@@ -161,11 +162,11 @@ final class RolesTable extends PowerGridComponent
             mkdir($path, 0777, true);
         }
         // Membuat file pdf
-        $pdf = Pdf::loadView('pdf.role', ['datasource' => $datasource]);
+        $pdf = Pdf::loadView('pdf.roles', ['datasource' => $datasource]);
         // Menyimpan file pdf ke folder pdf
-        $pdf->save($path . '/role.pdf');
+        $pdf->save($path . '/roles.pdf');
         // Menampilkan file pdf
-        return response()->download($path . '/role.pdf');
+        return response()->download($path . '/roles.pdf');
     }
 
     // Function to delete data

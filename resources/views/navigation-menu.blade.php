@@ -91,7 +91,9 @@
                         </x-nav-link>
                     </li>
                 @endif
-                @if (auth()->user()->hasRole('Koor TAPM') || auth()->user()->hasRole('Anggota TAPM'))
+                @if (auth()->user()->hasRole('Koor TAPM') ||
+                        auth()->user()->hasRole('Anggota TAPM') ||
+                        auth()->user()->hasRole('Operator'))
                     {{-- Penugasan --}}
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('penugasan') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">

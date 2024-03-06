@@ -260,7 +260,11 @@ final class SuratTable extends PowerGridComponent
     {
         $path = public_path() . '/pdf';
         // Mendapatkan datasource
-        $datasource = $this->datasource()->get();
+        $datasource = $this->datasource()->get()->map(function ($row) {
+            $row->pengirim = $row->pengirim ? $row->pengirim->name : $row->pengirim_eksternal;
+            $row->penerima = $row->penerima ? $row->penerima->name : $row->penerima_eksternal;
+            return $row;
+        });
         // Membuat folder pdf jika belum ada
         if (!file_exists($path)) {
             mkdir($path, 0777, true);

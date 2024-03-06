@@ -147,7 +147,7 @@ final class PenjadwalanTable extends PowerGridComponent
         return $header;
     }
 
-    public function gitlisteners()
+    public function getlisteners()
     {
         return array_merge(
             parent::getListeners(),

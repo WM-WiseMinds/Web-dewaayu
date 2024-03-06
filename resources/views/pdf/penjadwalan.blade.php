@@ -54,7 +54,7 @@
 </style>
 
 <div class="text-center">
-    <h2>Daftar Izin Akses</h2>
+    <h2>Daftar Penjadwalan</h2>
 </div>
 <div class="divider"></div>
 <div class="text-right mb-20">
@@ -65,14 +65,20 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>Nama Izin</th>
+            <th>Nama Anggota TAPM</th>
+            <th>Tanggal Kegiatan</th>
+            <th>Lokasi Kegiatan</th>
+            <th>Desa</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($datasource as $permission)
+        @foreach ($datasource as $penjadwalan)
             <tr>
-                <td>{{ $permission->id }}</td>
-                <td>{{ $permission->name }}</td>
+                <td>{{ $penjadwalan->id }}</td>
+                <td>{{ $penjadwalan->user->name }}</td>
+                <td>{{ $penjadwalan->penugasan->surat->tanggal_kegiatan }}</td>
+                <td>{{ $penjadwalan->penugasan->surat->lokasi_kegiatan }}</td>
+                <td>{{ $penjadwalan->penugasan->surat->desa->nama_desa }}</td>
             </tr>
         @endforeach
     </tbody>

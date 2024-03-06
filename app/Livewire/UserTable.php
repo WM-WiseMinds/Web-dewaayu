@@ -57,7 +57,8 @@ final class UserTable extends PowerGridComponent
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->with('roles')
-            ->select('users.*', 'roles.name as role_name', 'roles.id as role_id');
+            ->select('users.*', 'roles.name as role_name', 'roles.id as role_id')
+            ->orderBy('users.id', 'asc');
 
         if ($selectedRoleId) {
             $query->whereHas('roles', function ($subQuery) use ($selectedRoleId) {
