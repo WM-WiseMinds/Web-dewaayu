@@ -26,10 +26,7 @@ final class BeritaTable extends PowerGridComponent
     {
         $this->showCheckBox();
 
-        return [
-            Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+        $setUp = [
             Header::make()->showSearchInput(),
             Footer::make()
                 ->showPerPage()
@@ -38,20 +35,25 @@ final class BeritaTable extends PowerGridComponent
                 ->showCollapseIcon()
                 ->view('details.berita-detail'),
         ];
+
+        if (auth()->user()->can('export')) {
+            $setUp[] = Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV);
+        }
+
+        return $setUp;
     }
 
     public function datasource(): Builder
     {
-        return Berita::query()
-            ->leftJoin('users', 'berita.user_id', '=', 'users.id')
-            ->select('berita.*', 'users.name as name','users.no_hp as no_hp','users.alamat as alamat');
-        ;
+        return Berita::query()->with('user');
     }
 
     public function relationSearch(): array
     {
         return [
-            'users'=> ['name','no_hp','alamat']
+            'user' => ['name']
         ];
     }
 
@@ -59,37 +61,29 @@ final class BeritaTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('name')
-            ->add('judul_berita')
-            ->add('deskripsi_berita')
+            ->add('penulis', fn ($row) => $row->user->name)
+            ->add('judul')
+            ->add('deskripsi')
             ->add('foto')
-            ->add('no_berita');
-         
+            ->add('no_berita')
+            ->add('created_at_formatted', fn ($row) => $row->created_at->format('d-m-Y'));
     }
     public function columns(): array
     {
         return [
-            Column::make('Id','id')
+            Column::make('Id', 'id')
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Nama ','name')
-                ->searchable()
-                ->sortable(),
-                
-            Column::make('Judul Berita','judul_berita')
+            Column::make('Nama ', 'penulis')
                 ->searchable()
                 ->sortable(),
 
-            // Column::make('Deskripsi Berita','deskripsi_berita')
-            //     ->searchable()
-            //     ->sortable(),
+            Column::make('Judul Berita', 'judul')
+                ->searchable()
+                ->sortable(),
 
-            // Column::make('Foto','foto')
-            //     ->searchable()
-            //     ->sortable(),
-
-            Column::make('No Berita','no_berita')
+            Column::make('Created At', 'created_at_formatted')
                 ->searchable()
                 ->sortable(),
 
@@ -99,14 +93,13 @@ final class BeritaTable extends PowerGridComponent
 
     public function filters(): array
     {
-        return [
-        ];
+        return [];
     }
 
     #[\Livewire\Attributes\On('edit')]
     public function edit($rowId): void
     {
-        $this->js('alert('.$rowId.')');
+        $this->js('alert(' . $rowId . ')');
     }
 
     public function actions(\App\Models\Berita $row): array
@@ -160,36 +153,36 @@ final class BeritaTable extends PowerGridComponent
                 'exportPdf',
                 'edit',
                 'berita-updated' => '$refresh',
-            ] 
+            ]
         );
     }
 
-     // Function to export PDF using DomPDF
-     public function exportPdf()
-     {
-         $path = public_path() . '/pdf';
-         // Mendapatkan datasource
-         $datasource = $this->datasource()->get();
-         // Membuat folder pdf jika belum ada
-         if (!file_exists($path)) {
-             mkdir($path, 0777, true);
-         }
-         // Membuat file pdf
-         $pdf = Pdf::loadView('pdf.berita', ['datasource' => $datasource]);
-         // Menyimpan file pdf ke folder pdf
-         $pdf->save($path . '/berita.pdf');
-         // Menampilkan file pdf
-         return response()->download($path . '/berita.pdf');
-     }
- 
-     // Function to delete data
-     public function delete($rowId)
-     {
-         $berita = Berita::findOrFail($rowId);
-         // Detach all associated users
-         $berita->user()->detach();
-         $berita->delete();
-     }
+    // Function to export PDF using DomPDF
+    public function exportPdf()
+    {
+        $path = public_path() . '/pdf';
+        // Mendapatkan datasource
+        $datasource = $this->datasource()->get();
+        // Membuat folder pdf jika belum ada
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        // Membuat file pdf
+        $pdf = Pdf::loadView('pdf.berita', ['datasource' => $datasource]);
+        // Menyimpan file pdf ke folder pdf
+        $pdf->save($path . '/berita.pdf');
+        // Menampilkan file pdf
+        return response()->download($path . '/berita.pdf');
+    }
+
+    // Function to delete data
+    public function delete($rowId)
+    {
+        $berita = Berita::findOrFail($rowId);
+        // Detach all associated users
+        $berita->user()->detach();
+        $berita->delete();
+    }
 
 
     /*

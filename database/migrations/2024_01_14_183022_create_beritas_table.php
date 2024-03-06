@@ -20,7 +20,7 @@ return new class extends Migration
             // Ini adalah kolom 'judul' yang akan digunakan untuk menyimpan judul berita.
             $table->string('judul');
             // Ini adalah kolom 'deskripsi' yang akan digunakan untuk menyimpan deskripsi atau isi berita.
-            $table->string('deskripsi');
+            $table->text('deskripsi');
             // Ini adalah kolom 'foto' yang akan digunakan untuk menyimpan path atau nama file foto berita.
             $table->string('foto')->nullable();
             // Ini adalah kolom 'timestamps' yang otomatis akan mencatat waktu pembuatan dan pembaruan record.
