@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Desa;
+use App\Models\Surat;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,7 +26,10 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $desaCount = Desa::count();
+        $suratCount = Surat::count();
+        $userCount = User::count();
+        return view('dashboard', compact('desaCount', 'suratCount', 'userCount'));
     })->name('dashboard');
 
     Route::get('/permissions', function () {
