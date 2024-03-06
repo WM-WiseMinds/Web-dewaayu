@@ -3,8 +3,8 @@
     <aside
         class="z-10 hidden w-64 overflow-y-auto bg-gradient-to-t from-purple-800 to-violet-600 md:block flex-shrink-0">
         <div class=" text-center py-4 text-gray-500 dark:text-gray-400">
-            <a href="{{ route('dashboard') }}" class=" mx-4text-lg font-bold text-white dark:text-gray-200">
-                SISTEM INFORMASI PENGARSIPAN SURAT
+            <a href="{{ route('dashboard') }}" class=" mx-4 my-auto text-lg font-bold text-white dark:text-gray-200">
+                SEKRETARIAT TAPM
             </a>
             <ul class="mt-6">
                 {{-- Dashboard --}}
@@ -155,8 +155,8 @@
         x-transition:leave-end="opacity-0 transform -translate-x-20">
 
         <div class="text-center py-4 text-gray-500">
-            <a href="{{ route('dashboard') }}" class=" mx-4text-lg font-bold text-white dark:text-gray-200">
-                SISTEM INFORMASI PENGARSIPAN SURAT
+            <a href="{{ route('dashboard') }}" class=" mx-4 my-auto text-lg font-bold text-white dark:text-gray-200">
+                SEKRETARIAT TAPM
             </a>
             <ul class="mt-6">
                 {{-- Dashboard --}}
