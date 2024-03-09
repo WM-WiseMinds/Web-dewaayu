@@ -1,7 +1,7 @@
 <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Primary Navigation Menu -->
     <aside
-        class="z-10 hidden w-64 overflow-y-auto bg-gradient-to-t from-purple-800 to-violet-600 md:block flex-shrink-0">
+    class="z-10 hidden w-64 overflow-y-auto bg-gradient-to-t from-purple-800 to-violet-600 md:block flex-shrink-0">
         <div class=" text-center py-4 text-gray-500 dark:text-gray-400">
             <a href="{{ route('dashboard') }}" class=" mx-4 my-auto text-lg font-bold text-white dark:text-gray-200">
                 SEKRETARIAT TAPM
