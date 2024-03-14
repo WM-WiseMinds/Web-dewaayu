@@ -6,6 +6,7 @@ use App\Models\Desa;
 use App\Models\Sekretarisdesa;
 use App\Models\Surat;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -260,5 +261,11 @@ class SuratForm extends ModalComponent
                 $this->penerima_name = $sekretarisDesa->name;
             }
         }
+    }
+
+    public function updateHari()
+    {
+        $date = Carbon::parse($this->tanggal_kegiatan);
+        $this->hari = $date->isoFormat('dddd');
     }
 }
