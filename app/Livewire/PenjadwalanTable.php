@@ -91,6 +91,7 @@ final class PenjadwalanTable extends PowerGridComponent
             ->add('no_hp', fn ($row) => $row->user->no_hp)
             ->add('tanggal_kegiatan', fn ($row) => Carbon::parse($row->penugasan->surat->tanggal_kegiatan)->format('d-m-Y'))
             ->add('waktu_kegiatan', fn ($row) => $row->penugasan->surat->waktu)
+            ->add('hari_kegiatan', fn ($row) => $row->penugasan->surat->hari)
             ->add('lokasi_kegiatan', fn ($row) => $row->penugasan->surat->lokasi_kegiatan)
             ->add('nama_desa', fn ($row) => $row->penugasan->surat->desa->nama_desa)
             ->add('created_at_formatted', fn ($row) => $row->created_at->format('d-m-Y'));
@@ -106,6 +107,9 @@ final class PenjadwalanTable extends PowerGridComponent
             Column::make('Nama', 'name')
                 ->searchable()
                 ->sortable(),
+
+            Column::make('Hari Kegiatan', 'hari_kegiatan')
+                ->searchable(),
 
             Column::make('Tanggal Kegiatan', 'tanggal_kegiatan')
                 ->searchable(),

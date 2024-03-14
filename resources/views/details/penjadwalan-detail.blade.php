@@ -14,6 +14,10 @@
                 <td class="border px-4 py-2">{{ $row->no_hp }}</td>
             </tr>
             <tr>
+                <td class="border px-4 py-2 text-sm font-semibold">Hari Kegiatan</td>
+                <td class="border px-4 py-2">{{ $row->hari_kegiatan }}</td>
+            </tr>
+            <tr>
                 <td class="border px-4 py-2 text-sm font-semibold">Tanggal Kegiatan</td>
                 <td class="border px-4 py-2">{{ $row->tanggal_kegiatan }}</td>
             </tr>
