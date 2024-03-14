@@ -59,20 +59,27 @@ class PenugasanForm extends ModalComponent
             $this->penugasan->save();
 
             if ($this->status == 'Disetujui') {
-                Penjadwalan::create([
-                    'user_id' => $this->penugasan->user_id,
-                    'penugasan_id' => $this->penugasan->id,
-                ]);
+                // Try to find an existing Penjadwalan
+                $penjadwalan = Penjadwalan::where('penugasan_id', $this->penugasan->id)->first();
+
+                if ($penjadwalan) {
+                    // If it exists, update it
+                    $penjadwalan->user_id = $this->penugasan->user_id;
+                    $penjadwalan->save();
+                } else {
+                    // If it doesn't exist, create a new one
+                    Penjadwalan::create([
+                        'user_id' => $this->penugasan->user_id,
+                        'penugasan_id' => $this->penugasan->id,
+                    ]);
+                }
 
                 redirect()->route('penjadwalan');
-
-                $this->success('Penjadwalan berhasil ditambahkan');
+                $this->success('Penjadwalan berhasil diperbarui');
             } else {
                 Penjadwalan::where('penugasan_id', $this->penugasan->id)->delete();
-
                 $this->success('Penjadwalan berhasil dihapus');
             }
-            $this->success('Status penugasan berhasil diubah');
         } else {
             $validatedData = $this->validate();
             $validatedData['status'] = $this->status;
