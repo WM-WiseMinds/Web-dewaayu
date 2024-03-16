@@ -7,12 +7,11 @@ use App\Models\Surat;
 use App\Models\Penugasan;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Masmerise\Toaster\Toastable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Footer;
 use PowerComponents\LivewirePowerGrid\Header;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -22,59 +21,39 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-final class SuratTable extends PowerGridComponent
+final class SuratMasukTable extends PowerGridComponent
 {
     use WithExport;
-    use Toastable;
 
     public function setUp(): array
     {
         $this->showCheckBox();
 
-        $setUp = [
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
             Header::make()->showSearchInput(),
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
-            Detail::make()
-                ->view('details.surat-detail')
-                ->showCollapseIcon(),
         ];
-
-        if (auth()->user()->can('export')) {
-            $setUp[] = Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV);
-        }
-
-        return $setUp;
     }
 
     public function datasource(): Builder
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->hasRole('Operator')) {
-            return Surat::where('jenis_surat', 'surat_masuk');
-        } elseif ($user->hasRole('Sekretaris Desa')) {
-            return Surat::where('penerima_id', $user->id)
-                ->orWhereHas('desa', function ($query) use ($user) {
-                    $query->where('id', $user->desa_id);
-                });
-        } elseif ($user->hasRole('Koor TAPM')) {
-            return Surat::where('penerima_id', $user->id);
+            return Surat::query()->where('jenis_surat', 'Surat Masuk');
+        } else {
+            return Surat::query()->where('pengirim_id', $user->id);
         }
-
-        return Surat::query();
     }
 
     public function relationSearch(): array
     {
-        return [
-            'pengirim' => ['name'],
-            'penerima' => ['name'],
-            'desa' => ['nama_desa']
-        ];
+        return [];
     }
 
     public function fields(): PowerGridFields
@@ -157,7 +136,8 @@ final class SuratTable extends PowerGridComponent
         ];
     }
 
-    public function actions(\App\Models\Surat $row): array
+
+    public function actions(Surat $row): array
     {
         $actions = [];
 
@@ -204,23 +184,23 @@ final class SuratTable extends PowerGridComponent
         $header = [];
 
         if (auth()->user()->can('create')) {
-            // if (auth()->user()->hasRole('Operator')) {
-            //     $header[] = Button::add('add-surat-masuk')
-            //         ->slot(__('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-            //         <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
-            //         </svg>
-            //     '))
-            //         ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700 w-full')
-            //         ->openModal('surat-form', ['type' => 'Surat Masuk']);
-            // }
+            if (auth()->user()->hasRole('Operator')) {
+                $header[] = Button::add('add-surat-masuk')
+                    ->slot(__('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
+                    </svg>
+                '))
+                    ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700 w-full')
+                    ->openModal('surat-form', ['type' => 'Surat Masuk']);
+            }
 
-            $header[] = Button::add('add-surat-keluar')
-                ->slot(__('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                </svg>
-            '))
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700 w-full')
-                ->openModal('surat-form', ['type' => 'Surat Keluar']);
+            // $header[] = Button::add('add-surat-keluar')
+            //     ->slot(__('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            //     <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+            //     </svg>
+            // '))
+            //     ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700 w-full')
+            //     ->openModal('surat-form', ['type' => 'Surat Keluar']);
         }
 
         if (auth()->user()->can('export')) {
