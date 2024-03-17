@@ -87,4 +87,15 @@ class Surat extends Model
         // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan belongsto yang dimana menghubungkan model ini dengan model desa
         return $this->belongsTo(Desa::class);
     }
+
+    /**
+     * Relasi antara model Surat dan model Penugasan.
+     *
+     * @return void
+     */
+    public function penugasan()
+    {
+        // line baris dibawah ini adalah tujuan dari relasi one to many menggunakan hasmany yang dimana menghubungkan model ini dengan model penugasan
+        return $this->hasOne(Penugasan::class);
+    }
 }

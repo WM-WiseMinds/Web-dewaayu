@@ -99,6 +99,7 @@ final class SuratTable extends PowerGridComponent
             ->add('waktu')
             ->add('lokasi_kegiatan')
             ->add('status')
+            ->add('status_penugasan', fn ($row) => $row->penugasan ? $row->penugasan->status : null)
             ->add('file_surat')
             ->add('created_at_formatted', fn ($row) => $row->created_at->format('d-m-Y'));
     }

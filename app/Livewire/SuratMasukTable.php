@@ -10,6 +10,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Detail;
@@ -53,18 +54,19 @@ final class SuratMasukTable extends PowerGridComponent
     {
         $user = auth()->user();
 
-        if ($user->hasRole('Operator')) {
-            return Surat::where('jenis_surat', 'Surat Masuk');
-        } elseif ($user->hasRole('Sekretaris Desa')) {
-            return Surat::where('penerima_id', $user->id)
-                ->orWhereHas('desa', function ($query) use ($user) {
-                    $query->where('id', $user->desa_id);
-                });
-        } elseif ($user->hasRole('Koor TAPM')) {
-            return Surat::where('penerima_id', $user->id);
-        }
-
-        return Surat::query();
+        return Surat::with('pengirim', 'penerima', 'desa')
+            ->when($user->hasRole('Operator'), function ($query) {
+                return $query->where('jenis_surat', 'Surat Masuk');
+            })
+            ->when($user->hasRole('Sekretaris Desa'), function ($query) use ($user) {
+                return $query->where('penerima_id', $user->id)
+                    ->orWhereHas('desa', function ($query) use ($user) {
+                        $query->where('id', $user->desa_id);
+                    });
+            })
+            ->when($user->hasRole('Koor TAPM'), function ($query) use ($user) {
+                return $query->where('penerima_id', $user->id);
+            });
     }
 
     public function relationSearch(): array
@@ -94,6 +96,7 @@ final class SuratMasukTable extends PowerGridComponent
             ->add('waktu')
             ->add('lokasi_kegiatan')
             ->add('status')
+            ->add('status_penugasan', fn ($row) => $row->penugasan ? $row->penugasan->status : null)
             ->add('file_surat')
             ->add('created_at_formatted', fn ($row) => $row->created_at->format('d-m-Y'));
     }

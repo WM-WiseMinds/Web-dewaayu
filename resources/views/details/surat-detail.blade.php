@@ -74,7 +74,7 @@
                 </tr>
             @endif
             <tr>
-                <td class="border px-4 py-2 text-sm font-semibold">Status</td>
+                <td class="border px-4 py-2 text-sm font-semibold">Status Surat</td>
                 <td class="border px-4 py-2">
                     @if ($row->status == 'Dikirim')
                         <div class="badge badge-warning">{{ $row->status }}</div>
@@ -84,6 +84,20 @@
                         <div class="badge badge-primary">{{ $row->status }}</div>
                     @else
                         <span class="text-red-500">{{ $row->status }}</span>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td class="border px-4 py-2 text-sm font-semibold">Status Penugasan</td>
+                <td class="border px-4 py-2">
+                    @if ($row->status_penugasan == 'Ditugaskan')
+                        <div class="badge badge-warning">{{ $row->status_penugasan }}</div>
+                    @elseif ($row->status_penugasan == 'Disetujui')
+                        <div class="badge badge-success">{{ $row->status_penugasan }}</div>
+                    @elseif($row->status_penugasan == 'Ditolak')
+                        <div class="badge badge-danger">{{ $row->status_penugasan }}</div>
+                    @else
+                        <span class="text-red-500">{{ $row->status_penugasan }}</span>
                     @endif
                 </td>
             </tr>
