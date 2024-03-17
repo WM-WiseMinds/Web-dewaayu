@@ -79,7 +79,7 @@ final class PenugasanTable extends PowerGridComponent
             ->add('perihal', fn ($row) => $row->surat->perihal)
             ->add('desa', fn ($row) => $row->surat->desa->nama_desa)
             ->add('tanggal_kegiatan', fn ($row) => Carbon::parse($row->surat->tanggal_kegiatan)->format('d-m-Y'))
-            ->add('waktu_kegiatan', fn ($row) => Carbon::parse($row->surat->waktu_kegiatan)->format('H:i'))
+            ->add('waktu_kegiatan', fn ($row) => $row->surat->waktu)
             ->add('lokasi_kegiatan', fn ($row) => $row->surat->lokasi_kegiatan)
             ->add('sekretaris_desa', fn ($row) => $row->surat->desa->user->name)
             ->add('no_hp_sekdes', fn ($row) => $row->surat->desa->user->no_hp)

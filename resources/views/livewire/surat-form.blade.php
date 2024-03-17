@@ -81,7 +81,7 @@
                                     <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
                                 @endforeach
                             </select>
-                            @error('penerima_id')
+                            @error('rekomendasi_id')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
                         </div>

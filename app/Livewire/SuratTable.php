@@ -146,10 +146,10 @@ final class SuratTable extends PowerGridComponent
                 ->dataSource($penerimaUsers)
                 ->optionLabel('name')
                 ->optionValue('id'),
-            Filter::select('jenis_surat', 'jenis_surat')
-                ->dataSource(Surat::all()->unique('jenis_surat'))
-                ->optionLabel('jenis_surat')
-                ->optionValue('jenis_surat'),
+            // Filter::select('jenis_surat', 'jenis_surat')
+            //     ->dataSource(Surat::all()->unique('jenis_surat'))
+            //     ->optionLabel('jenis_surat')
+            //     ->optionValue('jenis_surat'),
             Filter::select('status', 'status')
                 ->dataSource(Surat::all()->unique('status'))
                 ->optionLabel('status')

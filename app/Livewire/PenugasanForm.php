@@ -84,6 +84,26 @@ class PenugasanForm extends ModalComponent
             $validatedData = $this->validate();
             $validatedData['status'] = $this->status;
 
+            $surat = Surat::find($this->surat_id);
+            $tanggal = $surat->tanggal_kegiatan;
+            $hari = $surat->hari;
+            $waktu = $surat->waktu;
+
+            // Periksa apakah user yang direkomendasikan sudah memiliki jadwal yang bentrok
+            $jadwalBentrok = Penjadwalan::whereHas('penugasan', function ($query) use ($tanggal, $hari, $waktu) {
+                $query->whereHas('surat', function ($query) use ($tanggal, $hari, $waktu) {
+                    $query->where('tanggal_kegiatan', $tanggal)
+                        ->where('hari', $hari)
+                        ->where('waktu', $waktu);
+                });
+            })->where('user_id', $this->user_id)->exists();
+
+            if ($jadwalBentrok) {
+                // Tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
+                $this->error('User yang direkomendasikan sudah memiliki jadwal pada waktu yang sama.');
+                return;
+            }
+
             $this->penugasan = Penugasan::updateOrCreate(['id' => $this->id], $validatedData);
 
             if ($this->penugasan->wasRecentlyCreated) {

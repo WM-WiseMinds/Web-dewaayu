@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Footer;
 use PowerComponents\LivewirePowerGrid\Header;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -29,15 +30,23 @@ final class SuratMasukTable extends PowerGridComponent
     {
         $this->showCheckBox();
 
-        return [
-            Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+        $setUp = [
             Header::make()->showSearchInput(),
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->view('details.surat-detail')
+                ->showCollapseIcon(),
         ];
+
+        if (auth()->user()->can('export')) {
+            $setUp[] = Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV);
+        }
+
+        return $setUp;
     }
 
     public function datasource(): Builder
@@ -132,10 +141,10 @@ final class SuratMasukTable extends PowerGridComponent
                 ->dataSource($penerimaUsers)
                 ->optionLabel('name')
                 ->optionValue('id'),
-            Filter::select('jenis_surat', 'jenis_surat')
-                ->dataSource(Surat::all()->unique('jenis_surat'))
-                ->optionLabel('jenis_surat')
-                ->optionValue('jenis_surat'),
+            // Filter::select('jenis_surat', 'jenis_surat')
+            //     ->dataSource(Surat::all()->unique('jenis_surat'))
+            //     ->optionLabel('jenis_surat')
+            //     ->optionValue('jenis_surat'),
             Filter::select('status', 'status')
                 ->dataSource(Surat::all()->unique('status'))
                 ->optionLabel('status')
@@ -161,7 +170,7 @@ final class SuratMasukTable extends PowerGridComponent
                 ->openModal('penugasan-form', ['surat_id' => $row->id]);
         }
 
-        if (auth()->user()->can('update')) {
+        if (auth()->user()->can('update') && auth()->user()->hasRole('Operator') || auth()->user()->hasRole('Sekretaris Desa')) {
             $actions[] = Button::add('edit')
                 ->slot('<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
