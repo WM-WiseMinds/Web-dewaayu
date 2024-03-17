@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Desa;
+use App\Models\Penjadwalan;
 use App\Models\Sekretarisdesa;
 use App\Models\Surat;
 use App\Models\User;
@@ -208,6 +209,18 @@ class SuratForm extends ModalComponent
 
     public function store()
     {
+        $jadwalBentrok = $this->checkJadwalBentrok(
+            $this->rekomendasi_id,
+            $this->tanggal_kegiatan,
+            $this->hari,
+            $this->waktu
+        );
+
+        if ($jadwalBentrok) {
+            $this->error('User yang direkomendasikan sudah memiliki jadwal pada waktu yang sama.');
+            return;
+        }
+
         $validatedData = $this->validate();
         $validatedData['status'] = $this->status;
 
@@ -268,5 +281,18 @@ class SuratForm extends ModalComponent
     {
         $date = Carbon::parse($this->tanggal_kegiatan);
         $this->hari = $date->isoFormat('dddd');
+    }
+
+    public function checkJadwalBentrok($userId, $tanggal, $hari, $waktu)
+    {
+        $jadwalBentrok = Penjadwalan::whereHas('penugasan', function ($query) use ($tanggal, $hari, $waktu) {
+            $query->whereHas('surat', function ($query) use ($tanggal, $hari, $waktu) {
+                $query->where('tanggal_kegiatan', $tanggal)
+                    ->where('hari', $hari)
+                    ->where('waktu', $waktu);
+            });
+        })->where('user_id', $userId)->exists();
+
+        return $jadwalBentrok;
     }
 }
