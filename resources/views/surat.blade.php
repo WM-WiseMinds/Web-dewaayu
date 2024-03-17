@@ -8,7 +8,7 @@
     <div class="pt-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
-                {{-- <x-welcome /> --}}
+                <h3 class="font-semibold text-xl pb-3 text-center text-black leading-tight">Surat Keluar</h3>
                 @livewire('surat-table')
             </div>
         </div>

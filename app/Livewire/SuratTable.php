@@ -55,14 +55,14 @@ final class SuratTable extends PowerGridComponent
         $user = auth()->user();
 
         if ($user->hasRole('Operator')) {
-            return Surat::where('jenis_surat', 'surat_masuk');
+            return Surat::where('jenis_surat', 'Surat Keluar');
         } elseif ($user->hasRole('Sekretaris Desa')) {
-            return Surat::where('penerima_id', $user->id)
+            return Surat::where('pengirim_id', $user->id)
                 ->orWhereHas('desa', function ($query) use ($user) {
                     $query->where('id', $user->desa_id);
                 });
         } elseif ($user->hasRole('Koor TAPM')) {
-            return Surat::where('penerima_id', $user->id);
+            return Surat::where('pengirim_id', $user->id);
         }
 
         return Surat::query();

@@ -42,13 +42,20 @@ final class SuratMasukTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         if ($user->hasRole('Operator')) {
-            return Surat::query()->where('jenis_surat', 'Surat Masuk');
-        } else {
-            return Surat::query()->where('pengirim_id', $user->id);
+            return Surat::where('jenis_surat', 'Surat Masuk');
+        } elseif ($user->hasRole('Sekretaris Desa')) {
+            return Surat::where('penerima_id', $user->id)
+                ->orWhereHas('desa', function ($query) use ($user) {
+                    $query->where('id', $user->desa_id);
+                });
+        } elseif ($user->hasRole('Koor TAPM')) {
+            return Surat::where('penerima_id', $user->id);
         }
+
+        return Surat::query();
     }
 
     public function relationSearch(): array

@@ -231,6 +231,7 @@ class SuratForm extends ModalComponent
         $this->success($this->surat->wasRecentlyCreated ? 'Surat berhasil dibuat' : 'Surat berhasil diupdate');
         $this->closeModalWithEvents([
             SuratTable::class => 'suratUpdated',
+            SuratMasukTable::class => 'suratUpdated',
         ]);
 
 
