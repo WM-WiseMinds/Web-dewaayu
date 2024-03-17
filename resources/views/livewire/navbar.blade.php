@@ -1,4 +1,4 @@
-<div class="navbar bg-gradient-to-t from-purple-800 to-violet-600">
+<div class="navbar bg-gradient-to-t from-teal-900 to-teal-800">
     <div class="navbar-start">
         <div class="dropdown">
             <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -87,7 +87,7 @@
                     </x-slot>
                 </x-dropdown>
             @else
-                <a href="{{ route('login') }}" class="btn btn-success mx-1 text-white">Log
+                <a href="{{ route('login') }}" class="btn btn-primary mx-1 text-white">Log
                     in</a>
             @endauth
         @endif

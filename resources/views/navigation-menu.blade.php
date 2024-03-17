@@ -1,17 +1,19 @@
 <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Primary Navigation Menu -->
-    <aside
-    class="z-10 hidden w-64 overflow-y-auto bg-gradient-to-t from-purple-800 to-violet-600 md:block flex-shrink-0">
+    <aside class="z-10 hidden w-64 overflow-y-auto bg-gradient-to-t from-teal-900 to-teal-800 md:block flex-shrink-0">
         <div class=" text-center py-4 text-gray-500 dark:text-gray-400">
-            <a href="{{ route('dashboard') }}" class=" mx-4 my-auto text-lg font-bold text-white dark:text-gray-200">
-                SEKRETARIAT TAPM
-            </a>
+            <div class="flex justify-center items-center mx-4 my-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 mr-2">
+                <a href="{{ route('dashboard') }}" class="text-lg font-bold text-white dark:text-gray-200">
+                    SEKRETARIAT TAPM
+                </a>
+            </div>
             <ul class="mt-6">
                 {{-- Dashboard --}}
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('dashboard') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('dashboard') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('dashboard') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -25,7 +27,7 @@
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('permissions') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('permissions') }}" :active="request()->routeIs('permissions')"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('permissions') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('permissions') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -38,7 +40,7 @@
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('roles') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('roles') }}" :active="request()->routeIs('roles')"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('roles') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('roles') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -51,7 +53,7 @@
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('user') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('user') }}" :active="request()->routeIs('user')"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('user') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('user') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -64,7 +66,7 @@
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('desa') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('desa') }}" :active="request()->routeIs('desa')"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('desa') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('desa') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -81,7 +83,7 @@
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('surat') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('surat') }}" :active="request()->routeIs('surat')"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('surat') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('surat') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -98,7 +100,7 @@
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('penugasan') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('penugasan') }}" :active="request()->routeIs('penugasan')"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('penugasan') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('penugasan') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -113,7 +115,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('penjadwalan') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('penjadwalan') }}" :active="request()->routeIs('penjadwalan')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('penjadwalan') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('penjadwalan') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -127,7 +129,7 @@
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('berita') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('berita') }}" :active="request()->routeIs('berita')"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('berita') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('berita') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -163,7 +165,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('dashboard') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('dashboard') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('dashboard') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -176,7 +178,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('permissions') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('permissions') }}" :active="request()->routeIs('permissions')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('permissions') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('permissions') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -189,7 +191,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('roles') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('roles') }}" :active="request()->routeIs('roles')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('roles') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('roles') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -202,7 +204,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('user') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('user') }}" :active="request()->routeIs('user')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('user') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('user') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -215,7 +217,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('desa') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('desa') }}" :active="request()->routeIs('desa')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('desa') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('desa') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -228,7 +230,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('surat') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('surat') }}" :active="request()->routeIs('surat')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('surat') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('surat') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -241,7 +243,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('penugasan') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('penugasan') }}" :active="request()->routeIs('penugasan')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('penugasan') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('penugasan') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -255,7 +257,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('penjadwalan') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('penjadwalan') }}" :active="request()->routeIs('penjadwalan')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('penjadwalan') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('penjadwalan') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -268,7 +270,7 @@
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('berita') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                     <x-nav-link href="{{ route('berita') }}" :active="request()->routeIs('berita')"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('berita') ? 'text-purple-400' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('berita') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
